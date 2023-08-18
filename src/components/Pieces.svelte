@@ -119,6 +119,12 @@
         glyphObj = glyphObj;
     };
 
+    let rotation = 0;
+    const handleRotationChange = () => {
+        glyphObj.rotate = rotation;
+        glyphObj = glyphObj;
+    };
+
     const addToLegend = () => {
         const id = nanoid();
         if (
@@ -186,6 +192,24 @@
                 </p>
             </div>
         {/if}
+        {#if pcRender !== undefined}
+            <div class="field">
+                <label class="label" for="addOverlay">Overlay text</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="text"
+                        id="addOverlay"
+                        bind:value="{textOverlay}"
+                        on:input="{handleOverlayChange}"
+                    />
+                </div>
+                <p class="help">
+                    Optional. Useful for denoting stacks. Meant for <i>short</i>
+                    strings.
+                </p>
+            </div>
+        {/if}
     </div>
     <div class="column">
         {#if glyphNames.length > 0}
@@ -209,19 +233,22 @@
         {/if}
         {#if pcRender !== undefined}
             <div class="field">
-                <label class="label" for="addOverlay">Overlay text</label>
+                <label class="label" for="rotate">Rotate</label>
                 <div class="control">
                     <input
                         class="input"
-                        type="text"
-                        id="addOverlay"
-                        bind:value="{textOverlay}"
-                        on:input="{handleOverlayChange}"
+                        type="number"
+                        id="rotate"
+                        min="0"
+                        max="359"
+                        bind:value="{rotation}"
+                        on:input="{handleRotationChange}"
                     />
                 </div>
                 <p class="help">
-                    Optional. Useful for denoting stacks. Meant for <i>short</i>
-                    strings.
+                    0&deg; is the glyph's default facing. Rotation increases
+                    clockwise. Rotation at angles not in 90&deg; increments can
+                    cause clipping.
                 </p>
             </div>
         {/if}

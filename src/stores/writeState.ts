@@ -12,10 +12,12 @@ let initialState: APRenderRepAbbreviated = {
         A: {
             name: "piece",
             player: 1,
+            rotate: 0,
         },
         B: {
             name: "piece",
             player: 2,
+            rotate: 0,
         },
     },
     pieces: null,
