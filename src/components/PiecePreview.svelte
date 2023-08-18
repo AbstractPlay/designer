@@ -22,8 +22,15 @@
             APRender(renderrep, opts);
             const svg = document.getElementById(svgid);
             const vb = svg.getAttribute("viewBox");
-            const [x, y, width, height] = vb.split(" ").map(n => parseInt(n, 10));
-            svg.setAttribute("viewBox", `${x - buffer} ${y - buffer} ${width + (buffer * 2)} ${height + (buffer * 2)}`);
+            const [x, y, width, height] = vb
+                .split(" ")
+                .map((n) => parseInt(n, 10));
+            svg.setAttribute(
+                "viewBox",
+                `${x - buffer} ${y - buffer} ${width + buffer * 2} ${
+                    height + buffer * 2
+                }`,
+            );
         } catch (err) {
             previewDiv.innerHTML = `<p>Unable to render the piece with the current parameters.</p>`;
         }
