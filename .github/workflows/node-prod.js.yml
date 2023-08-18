@@ -4,15 +4,14 @@
 name: Designer CI
 
 on:
-  push:
-    branches: [ "main" ]
-  repository_dispatch:
-    types: [dep_update_prod]
-  workflow_dispatch:
+    push:
+        branches: ["main"]
+    repository_dispatch:
+        types: [dep_update_prod]
+    workflow_dispatch:
 
 jobs:
     build-prod:
-
         runs-on: ubuntu-latest
 
         # strategy:
@@ -21,35 +20,35 @@ jobs:
         #     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
         steps:
-        - uses: actions/checkout@v3
-          with:
-            ref: "main"
+            - uses: actions/checkout@v3
+              with:
+                  ref: "main"
 
-        - name: Use Node.js 18.x
-          uses: actions/setup-node@v3
-          with:
-            node-version: 18.x
-            cache: 'npm'
+            - name: Use Node.js 18.x
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18.x
+                  cache: "npm"
 
-        - name: Install Serverless Framework
-          run: npm install -g serverless
+            - name: Install Serverless Framework
+              run: npm install -g serverless
 
-        - name: Serverless AWS authentication
-          run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+            - name: Serverless AWS authentication
+              run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
 
-        - name: Configure AWS credentials
-          uses: Fooji/create-aws-profile-action@v1
-          with:
-            profile: AbstractPlayDev
-            region: us-east-1
-            key: ${{ secrets.AWS_KEY}}
-            secret: ${{ secrets.AWS_SECRET}}
+            - name: Configure AWS credentials
+              uses: Fooji/create-aws-profile-action@v1
+              with:
+                  profile: AbstractPlayDev
+                  region: us-east-1
+                  key: ${{ secrets.AWS_KEY}}
+                  secret: ${{ secrets.AWS_SECRET}}
 
-        - name: Install deps
-          run: echo "@abstractplay:registry=https://npm.pkg.github.com/" >> .npmrc
-        - run: echo "//npm.pkg.github.com/:_authToken=${{secrets.PAT_READ_PACKAGES}}" >> .npmrc
-        - run: npm i
-        - run: npm i @abstractplay/renderer
-        - run: npm list @abstractplay/renderer
-        - run: npm test --if-present
-        - run: npm run full
+            - name: Install deps
+              run: echo "@abstractplay:registry=https://npm.pkg.github.com/" >> .npmrc
+            - run: echo "//npm.pkg.github.com/:_authToken=${{secrets.PAT_READ_PACKAGES}}" >> .npmrc
+            - run: npm i
+            - run: npm i @abstractplay/renderer
+            - run: npm list @abstractplay/renderer
+            - run: npm test --if-present
+            - run: npm run full

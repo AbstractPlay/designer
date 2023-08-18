@@ -79,7 +79,45 @@
     };
 
     let stackingEnabled = false;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+        if (event.repeat) return;
+        if (
+            [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "0",
+                "Delete",
+                "s",
+                "S",
+            ].includes(event.key)
+        ) {
+            if (event.key === "Delete" || event.key === "0") {
+                handlePcSelect("_eraser");
+            } else if (event.key === "s" || event.key === "S") {
+                stackingEnabled = !stackingEnabled;
+            } else {
+                const keys = Object.keys($state.legend);
+                if (keys.length > 0) {
+                    let idx = parseInt(event.key, 10);
+                    if (idx > keys.length) {
+                        return;
+                    }
+                    handlePcSelect(keys[idx - 1]);
+                }
+            }
+        }
+    };
 </script>
+
+<svelte:window on:keydown="{onKeyDown}" />
 
 <div class="content">
     <p>
@@ -88,6 +126,11 @@
         containing the selected piece, it will be removed, otherwise it will be
         replaced (unless stacking is turned on). The trashcan icon will delete
         any piece you click on.
+    </p>
+    <p>
+        On desktop, press the keys 1–9 to select one of the first nine pieces in
+        the legend. Pressing 0 or the Delete key will select the eraser. Use the
+        S key to toggle stacking.
     </p>
 </div>
 
@@ -120,10 +163,10 @@
 <div class="columns">
     <div class="column is-one-third">
         <div class="box">
-            <div class="columns is-multiline">
+            <div class="columns is-multiline is-mobile">
                 {#each Object.keys($state.legend) as pc}
                     <div
-                        class="column piece{selectedPiece === pc
+                        class="column is-narrow piece{selectedPiece === pc
                             ? ' selected'
                             : ''}"
                         on:click="{() => handlePcSelect(pc)}"
@@ -135,7 +178,7 @@
                     </div>
                 {/each}
                 <div
-                    class="column piece{selectedPiece === '_eraser'
+                    class="column is-narrow piece{selectedPiece === '_eraser'
                         ? ' selected'
                         : ''}"
                     on:click="{() => handlePcSelect('_eraser')}"
@@ -160,7 +203,7 @@
         border: 2px dotted black;
     }
     .piece {
-        min-width: 25%;
+        /* min-width: 25%; */
         max-width: 25%;
     }
 </style>

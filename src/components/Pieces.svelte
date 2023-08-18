@@ -226,7 +226,7 @@
             </div>
         {/if}
     </div>
-    <div class="column">
+    <div class="column piece">
         {#key pcRender}
             <PiecePreview renderrep="{pcRender}" />
         {/key}
@@ -249,7 +249,7 @@
     <div class="columns is-multiline">
         {#each Object.keys($state.legend) as key}
             <div
-                class="column is-one-fifth"
+                class="column is-one-fifth piece"
                 on:click="{() => removeFromLegend(key)}"
                 on:keydown="{() => removeFromLegend(key)}"
                 role="button"
@@ -260,3 +260,10 @@
         {/each}
     </div>
 {/key}
+
+<style>
+    .piece {
+        max-width: 25%;
+        max-height: 25%;
+    }
+</style>

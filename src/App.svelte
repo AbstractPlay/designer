@@ -9,7 +9,7 @@
     let activeTab: "intro" | "board" | "pieces" | "play" | "json" = "intro";
 </script>
 
-<main class="container p-0">
+<main class="container p-6">
     <div class="level">
         <div class="level-left">
             <div class="level-item">
