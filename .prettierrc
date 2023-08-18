@@ -1,0 +1,7 @@
+{
+    "plugins": ["prettier-plugin-svelte"],
+    "svelteStrictMode": true,
+    "svelteAllowShorthand": false,
+    "svelteIndentScriptAndStyle": true,
+    "tabWidth": 4
+}

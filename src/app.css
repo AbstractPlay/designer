@@ -1,0 +1,98 @@
+/* Overall font definitions */
+@import url("https://fonts.googleapis.com/css2?family=Cardo:wght@700&family=Josefin+Sans&display=swap");
+
+/* Colour definitions */
+:root {
+    --main-bg-color: white;
+    --main-fg-color: #1a3e6f;
+    --main-fg-color-lighter: #c3d6f1;
+    --bg-color2: #999999;
+    --secondary-color-1: #ff6633;
+    --secondary-color-1-lighter: #ff8962;
+    --secondary-color-1-bg: #ffe8e0;
+    --secondary-color-2: #99cccc;
+    --secondary-color-2-lighter: #e6f2f2;
+    --secondary-color-3: #008ca8;
+    --secondary-color-3-lighter: #009fbf;
+    --secondary-color-3-bg: #eefcff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Cardo", serif;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 1em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--main-bg-color);
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+/* Link handling */
+a {
+    color: inherit;
+}
+
+.content * a {
+    text-decoration: underline;
+}
+
+table * a {
+    color: var(--secondary-color-3);
+    text-decoration: underline;
+}
+
+/* Add a little bit of space after checkboxes and radio buttons */
+input[type="checkbox"],
+input[type="radio"] {
+    margin-right: 0.25em;
+}
+
+/* Only used to colour buttons until I can figure out how to override Bulma colours */
+.apButton {
+    background: linear-gradient(
+        180deg,
+        var(--secondary-color-3-lighter) 0%,
+        var(--secondary-color-3) 100%
+    );
+    color: white;
+}
+
+.apButton:hover {
+    background: var(--main-fg-color);
+    color: white;
+}
+
+.apButtonAlert {
+    background: linear-gradient(
+        180deg,
+        var(--secondary-color-1-lighter) 0%,
+        var(--secondary-color-1) 100%
+    );
+    color: white;
+}
+
+.apButtonAlert:hover {
+    background: var(--main-fg-color);
+    color: white;
+}
