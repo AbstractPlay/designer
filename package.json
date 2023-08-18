@@ -27,7 +27,7 @@
         "vite": "^4.4.5"
     },
     "dependencies": {
-        "@abstractplay/renderer": "latest",
+        "@abstractplay/renderer": "^1.0.0-ci-5902287137.0",
         "nanoid": "^4.0.2"
     }
 }

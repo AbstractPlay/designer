@@ -3,7 +3,7 @@
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
     import type { APRenderRepAbbreviated } from "../schemas/renderModified";
-    import { afterUpdate, onMount } from "svelte";
+    import { afterUpdate } from "svelte";
     import PiecePreview from "./PiecePreview.svelte";
 
     const boardClick = (row: number, col: number, piece: string) => {
@@ -27,7 +27,9 @@
             let stack = matrix[row][col];
             if (
                 selectedPiece === "_eraser" ||
-                (stack.length > 0 && stack[stack.length - 1] === selectedPiece)
+                (stack.length === 1 &&
+                    !stackingEnabled &&
+                    stack[stack.length - 1] === selectedPiece)
             ) {
                 stack.pop();
             } else {
@@ -78,6 +80,16 @@
 
     let stackingEnabled = false;
 </script>
+
+<div class="content">
+    <p>
+        Click to select a piece. Click the selected piece to deselect it. Click
+        the board with a piece selected to add/remove it. If you click a cell
+        containing the selected piece, it will be removed, otherwise it will be
+        replaced (unless stacking is turned on). The trashcan icon will delete
+        any piece you click on.
+    </p>
+</div>
 
 <div class="level">
     <div class="level-left">
