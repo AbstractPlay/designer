@@ -125,6 +125,18 @@
         glyphObj = glyphObj;
     };
 
+    let opacity = 1;
+    const handleOpacityChange = () => {
+        glyphObj.opacity = opacity;
+        glyphObj = glyphObj;
+    };
+
+    let scale = 1;
+    const handleScaleChange = () => {
+        glyphObj.scale = scale;
+        glyphObj = glyphObj;
+    };
+
     const addToLegend = () => {
         const id = nanoid();
         if (
@@ -191,8 +203,21 @@
                     hexadecimal colour string starting with a <code>#</code> character.
                 </p>
             </div>
-        {/if}
-        {#if pcRender !== undefined}
+            <div class="field">
+                <label class="label" for="opacity">Opacity</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="number"
+                        id="opacity"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        bind:value="{opacity}"
+                        on:input="{handleOpacityChange}"
+                    />
+                </div>
+            </div>
             <div class="field">
                 <label class="label" for="addOverlay">Overlay text</label>
                 <div class="control">
@@ -249,6 +274,26 @@
                     0&deg; is the glyph's default facing. Rotation increases
                     clockwise. Rotation at angles not in 90&deg; increments can
                     cause clipping.
+                </p>
+            </div>
+            <div class="field">
+                <label class="label" for="scale">Scale</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="number"
+                        id="scale"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        bind:value="{scale}"
+                        on:input="{handleScaleChange}"
+                    />
+                </div>
+                <p class="help">
+                    Represented as a percent. You can only shrink pieces by
+                    selecting a number between 0 and 1. This will cause issues
+                    with overlay text.
                 </p>
             </div>
         {/if}
