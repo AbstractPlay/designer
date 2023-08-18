@@ -37,6 +37,14 @@ jobs:
         - name: Serverless AWS authentication
           run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
 
+        - name: Configure AWS credentials
+          uses: Fooji/create-aws-profile-action@v1
+          with:
+            profile: AbstractPlayDev
+            region: us-east-1
+            key: ${{ secrets.AWS_KEY}}
+            secret: ${{ secrets.AWS_SECRET}}
+
         - name: Install deps
           run: echo "@abstractplay:registry=https://npm.pkg.github.com/" >> .npmrc
         - run: echo "//npm.pkg.github.com/:_authToken=${{secrets.PAT_READ_PACKAGES}}" >> .npmrc
