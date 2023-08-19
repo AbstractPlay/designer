@@ -241,9 +241,7 @@
                 {#if showCode}
                     <p>
                         Your ID is <code>{id}</code>
-                        <a
-                            target="_self"
-                            on:click="{() => (showCode = false)}"
+                        <a target="_self" on:click="{() => (showCode = false)}"
                             ><span class="clickTarget">(click to hide)</span></a
                         >
                     </p>

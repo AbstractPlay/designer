@@ -9,11 +9,14 @@
     import PeerList from "./components/PeerList.svelte";
 
     let activeTab: "intro" | "board" | "pieces" | "play" | "json" = "intro";
-    const handleClick = (e: MouseEvent|TouchEvent, key: "intro" | "board" | "pieces" | "play" | "json") => {
+    const handleClick = (
+        e: MouseEvent | TouchEvent,
+        key: "intro" | "board" | "pieces" | "play" | "json",
+    ) => {
         e.preventDefault();
         activeTab = key;
         return false;
-    }
+    };
 </script>
 
 <main class="container p-6">
@@ -46,19 +49,21 @@
     <div class="tabs is-boxed">
         <ul>
             <li class="{activeTab === 'intro' ? 'is-active' : ''}">
-                <a on:click="{(e) => handleClick(e, "intro")}"> Introduction </a>
+                <a on:click="{(e) => handleClick(e, 'intro')}">
+                    Introduction
+                </a>
             </li>
             <li class="{activeTab === 'board' ? 'is-active' : ''}">
-                <a on:click="{(e) => handleClick(e, "board")}"> Board </a>
+                <a on:click="{(e) => handleClick(e, 'board')}"> Board </a>
             </li>
             <li class="{activeTab === 'pieces' ? 'is-active' : ''}">
-                <a on:click="{(e) => handleClick(e, "pieces")}"> Pieces </a>
+                <a on:click="{(e) => handleClick(e, 'pieces')}"> Pieces </a>
             </li>
             <li class="{activeTab === 'play' ? 'is-active' : ''}">
-                <a on:click="{(e) => handleClick(e, "play")}"> Play </a>
+                <a on:click="{(e) => handleClick(e, 'play')}"> Play </a>
             </li>
             <li class="{activeTab === 'json' ? 'is-active' : ''}">
-                <a on:click="{(e) => handleClick(e, "json")}"> JSON </a>
+                <a on:click="{(e) => handleClick(e, 'json')}"> JSON </a>
             </li>
         </ul>
     </div>

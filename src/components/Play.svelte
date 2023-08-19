@@ -65,7 +65,10 @@
     });
 
     let selectedPiece: string | undefined;
-    const handlePcSelect = (e:MouseEvent|TouchEvent|KeyboardEvent, key: string) => {
+    const handlePcSelect = (
+        e: MouseEvent | TouchEvent | KeyboardEvent,
+        key: string,
+    ) => {
         e.preventDefault();
         if (selectedPiece === key) {
             selectedPiece = undefined;
