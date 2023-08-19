@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { state } from "../stores/writeState";
+    import { state } from "@/stores/writeState";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
-    import type { APRenderRepAbbreviated } from "../schemas/renderModified";
+    import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
     import { onMount } from "svelte";
 
     type boardType =

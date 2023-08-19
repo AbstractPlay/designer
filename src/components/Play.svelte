@@ -1,10 +1,14 @@
 <script lang="ts">
-    import { state } from "../stores/writeState";
+    import { state } from "@/stores/writeState";
+    import { peers } from "@/stores/writePeers";
+    import { haveToken } from "@/stores/writeToken";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
-    import type { APRenderRepAbbreviated } from "../schemas/renderModified";
+    import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
     import { afterUpdate } from "svelte";
     import PiecePreview from "./PiecePreview.svelte";
+    import type { APDesignerClientMessages } from "@/schemas/messages";
+    import Modal from "./Modal.svelte";
 
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
@@ -115,6 +119,27 @@
             }
         }
     };
+
+    let selectedPeer: string;
+    const handleGiveToken = () => {
+        if (selectedPeer !== undefined) {
+            const peer = $peers.find((p) => p.id === selectedPeer);
+            if (peer !== undefined) {
+                const msgReplace = {
+                    type: "gameReplace",
+                    game: JSON.stringify($state),
+                };
+                const msgGive: APDesignerClientMessages = {
+                    type: "giveToken",
+                };
+                peer.connection.send(msgReplace);
+                peer.connection.send(msgGive);
+                $haveToken = false;
+            }
+        }
+    };
+
+    let showTakeModal = false;
 </script>
 
 <svelte:window on:keydown="{onKeyDown}" />
@@ -192,11 +217,84 @@
                 </div>
             </div>
         </div>
+        {#if $peers.length > 0}
+            <div class="box">
+                {#if $haveToken}
+                    <div class="content">
+                        <p class="is-success">You have the talking stick.</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <div class="select">
+                                <select bind:value="{selectedPeer}">
+                                    {#each $peers as peer}
+                                        <option value="{peer.id}"
+                                            >{peer.alias}</option
+                                        >
+                                    {/each}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <button
+                                class="button apButton"
+                                on:click="{handleGiveToken}"
+                                >Give talking stick</button
+                            >
+                        </div>
+                    </div>
+                {:else}
+                    <div class="content">
+                        <p class="is-danger">
+                            You do not have the talking stick.
+                        </p>
+                    </div>
+                    <div class="control">
+                        <button
+                            class="button apButton"
+                            on:click="{() => (showTakeModal = true)}"
+                            >Take talking stick</button
+                        >
+                    </div>
+                {/if}
+            </div>
+        {/if}
     </div>
     <div class="column">
         <div bind:this="{previewDiv}" id="previewDiv" class="box"></div>
     </div>
 </div>
+
+<Modal
+    title="Take the Talking Stick"
+    show="{showTakeModal}"
+    buttons="{[
+        {
+            label: 'Take it',
+            style: 'is-success',
+            callback: () => {
+                for (const p of $peers) {
+                    p.connection.send({ type: 'takeToken' });
+                }
+                $haveToken = true;
+                showTakeModal = false;
+            },
+        },
+        {
+            label: 'Cancel',
+            callback: () => (showTakeModal = false),
+        },
+    ]}"
+>
+    <div class="content">
+        <p>
+            This is intended to be used only when something has gone wrong. If
+            you take the stick, you may miss out on changes the current stick
+            holder made. Are you sure you wish to forcibly take the talking
+            stick?
+        </p>
+    </div>
+</Modal>
 
 <style>
     .selected {
@@ -205,5 +303,13 @@
     .piece {
         /* min-width: 25%; */
         max-width: 25%;
+    }
+    .is-success {
+        background-color: #48c78e;
+        color: #fff;
+    }
+    .is-danger {
+        background-color: #f14668;
+        color: #fff;
     }
 </style>

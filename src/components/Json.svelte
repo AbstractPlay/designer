@@ -1,6 +1,6 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
-    import { state } from "../stores/writeState";
+    import { state } from "@/stores/writeState";
     import Modal from "./Modal.svelte";
 
     let copied = false;

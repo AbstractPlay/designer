@@ -50,14 +50,6 @@ html {
 
 /* Link handling */
 a {
-    color: inherit;
-}
-
-.content * a {
-    text-decoration: underline;
-}
-
-table * a {
     color: var(--secondary-color-3);
     text-decoration: underline;
 }

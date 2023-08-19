@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { state } from "../stores/writeState";
+    import { state } from "@/stores/writeState";
     import { sheets } from "@abstractplay/renderer/src/sheets";
     import type {
         APRenderRepAbbreviated,
         Glyph,
-    } from "../schemas/renderModified";
+    } from "@/schemas/renderModified";
     import { onMount } from "svelte";
     import { customAlphabet } from "nanoid";
     const nanoid = customAlphabet(

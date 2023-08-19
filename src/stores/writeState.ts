@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { APRenderRepAbbreviated } from "../schemas/renderModified";
+import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
 
 let initialState: APRenderRepAbbreviated = {
     renderer: "stacking-offset",

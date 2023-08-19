@@ -5,6 +5,8 @@
     import Pieces from "./components/Pieces.svelte";
     import Json from "./components/Json.svelte";
     import Play from "./components/Play.svelte";
+    import Status from "./components/Status.svelte";
+    import PeerList from "./components/PeerList.svelte";
 
     let activeTab: "intro" | "board" | "pieces" | "play" | "json" = "intro";
 </script>
@@ -21,28 +23,26 @@
             </div>
         </div>
     </div>
+
+    <Status />
+    <PeerList />
+
     <div class="tabs is-boxed">
         <ul>
             <li class="{activeTab === 'intro' ? 'is-active' : ''}">
-                <a on:click="{() => (activeTab = 'intro')}" href="{'#'}"
-                    >Introduction</a
-                >
+                <a on:click="{() => (activeTab = 'intro')}"> Introduction </a>
             </li>
             <li class="{activeTab === 'board' ? 'is-active' : ''}">
-                <a on:click="{() => (activeTab = 'board')}" href="{'#'}"
-                    >Board</a
-                >
+                <a on:click="{() => (activeTab = 'board')}"> Board </a>
             </li>
             <li class="{activeTab === 'pieces' ? 'is-active' : ''}">
-                <a on:click="{() => (activeTab = 'pieces')}" href="{'#'}"
-                    >Pieces</a
-                >
+                <a on:click="{() => (activeTab = 'pieces')}"> Pieces </a>
             </li>
             <li class="{activeTab === 'play' ? 'is-active' : ''}">
-                <a on:click="{() => (activeTab = 'play')}" href="{'#'}">Play</a>
+                <a on:click="{() => (activeTab = 'play')}"> Play </a>
             </li>
             <li class="{activeTab === 'json' ? 'is-active' : ''}">
-                <a on:click="{() => (activeTab = 'json')}" href="{'#'}">JSON</a>
+                <a on:click="{() => (activeTab = 'json')}"> JSON </a>
             </li>
         </ul>
     </div>
