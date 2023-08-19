@@ -32,6 +32,7 @@
                 <div>
                     <p class="title">Game Designer</p>
                     <div>
+                        <!-- svelte-ignore missing-declaration -->
                         <p class="subtitle">Version: {__APP_VERSION__}</p>
                     </div>
                 </div>
