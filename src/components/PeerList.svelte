@@ -107,7 +107,6 @@
                     <a
                         target="_self"
                         class="panel-block"
-                        href="{'#'}"
                         data-tooltip="{p.id}"
                         on:click="{() => {
                             clickedPeer = p;

@@ -242,7 +242,6 @@
                     <p>
                         Your ID is <code>{id}</code>
                         <a
-                            href="{'#'}"
                             target="_self"
                             on:click="{() => (showCode = false)}"
                             ><span class="clickTarget">(click to hide)</span></a
@@ -251,14 +250,12 @@
                 {:else}
                     <p>
                         Connection established <a
-                            href="{'#'}"
                             target="_self"
                             on:click="{() => copyTextToClipboard(id)}"
                             ><span class="clickTarget">(click to copy ID)</span
                             ></a
                         >
                         <a
-                            href="{'#'}"
                             target="_self"
                             on:click="{() => (modalShow = 'is-active')}"
                             ><span class="clickTarget">(click to show ID)</span

@@ -65,12 +65,14 @@
     });
 
     let selectedPiece: string | undefined;
-    const handlePcSelect = (key: string) => {
+    const handlePcSelect = (e:MouseEvent|TouchEvent|KeyboardEvent, key: string) => {
+        e.preventDefault();
         if (selectedPiece === key) {
             selectedPiece = undefined;
         } else {
             selectedPiece = key;
         }
+        return false;
     };
     const toRep = (key: string): APRenderRepAbbreviated => {
         return {
@@ -104,7 +106,7 @@
             ].includes(event.key)
         ) {
             if (event.key === "Delete" || event.key === "0") {
-                handlePcSelect("_eraser");
+                handlePcSelect(event, "_eraser");
             } else if (event.key === "s" || event.key === "S") {
                 stackingEnabled = !stackingEnabled;
             } else {
@@ -114,7 +116,7 @@
                     if (idx > keys.length) {
                         return;
                     }
-                    handlePcSelect(keys[idx - 1]);
+                    handlePcSelect(event, keys[idx - 1]);
                 }
             }
         }
@@ -194,8 +196,8 @@
                         class="column is-narrow piece{selectedPiece === pc
                             ? ' selected'
                             : ''}"
-                        on:click="{() => handlePcSelect(pc)}"
-                        on:keydown="{() => handlePcSelect(pc)}"
+                        on:click="{(e) => handlePcSelect(e, pc)}"
+                        on:keydown="{(e) => handlePcSelect(e, pc)}"
                         role="button"
                         tabindex="0"
                     >
@@ -206,8 +208,8 @@
                     class="column is-narrow piece{selectedPiece === '_eraser'
                         ? ' selected'
                         : ''}"
-                    on:click="{() => handlePcSelect('_eraser')}"
-                    on:keydown="{() => handlePcSelect('_eraser')}"
+                    on:click="{(e) => handlePcSelect(e, '_eraser')}"
+                    on:keydown="{(e) => handlePcSelect(e, '_eraser')}"
                     role="button"
                     tabindex="0"
                 >
