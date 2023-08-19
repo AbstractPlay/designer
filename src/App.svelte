@@ -27,6 +27,16 @@
                 />
             </div>
         </div>
+        <div class="level-right">
+            <div class="level-item">
+                <div>
+                    <p class="title">Game Designer</p>
+                    <div>
+                        <p class="subtitle">Version: {__APP_VERSION__}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <Status />
