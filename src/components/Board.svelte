@@ -81,9 +81,11 @@
     ]);
 
     let whichWidth: "abs" | "minmax" | undefined;
+    let canBlock = false;
     const handleStyleChange = () => {
         if ($state.board.style === undefined) {
             $state.board = { style: undefined };
+            whichWidth = undefined;
         } else if (
             $state.board.style.startsWith("squares") ||
             $state.board.style.startsWith("vertex") ||
@@ -91,11 +93,19 @@
             $state.board.style.startsWith("hex-even") ||
             $state.board.style === "snubsquare"
         ) {
+            if (
+                $state.board.style.startsWith("squares") ||
+                $state.board.style.startsWith("hex-odd") ||
+                $state.board.style.startsWith("hex-even")
+            ) {
+                canBlock = true;
+            }
             whichWidth = "abs";
             $state.board = {
                 style: $state.board.style,
                 width: 8,
                 height: 8,
+                blocked: canBlock ? $state.board.blocked : undefined,
             };
         } else if ($state.board.style === "circular-cobweb") {
             whichWidth = "abs";
@@ -124,6 +134,29 @@
         $state = $state;
     };
 
+
+    const handleBoardClick = (row: number, col: number) => {
+        console.log(`Row: ${row}, Col: ${col}`);
+        // @ts-ignore
+        let lst: [{row: number, col: number}, ...{row: number, col: number}[]] = [];
+        if ( ("blocked" in $state.board) && ($state.board.blocked !== undefined) ) {
+            lst = JSON.parse(JSON.stringify($state.board.blocked));
+        }
+        const idx = lst.findIndex(p => p.col === col && p.row === row);
+        if (idx >= 0) {
+            lst.splice(idx, 1);
+        } else {
+            lst.push({row, col});
+        }
+        if (lst.length > 0) {
+            $state.board.blocked = lst;
+        } else {
+            delete $state.board.blocked;
+        }
+        $state = $state;
+        return false;
+    }
+
     let previewDiv: HTMLDivElement;
     onMount(() => {
         state.subscribe((state) => {
@@ -135,6 +168,7 @@
                 const opts: IRenderOptions = {
                     divelem: previewDiv,
                     width: "100%",
+                    boardClick: canBlock ? handleBoardClick : undefined,
                 };
                 try {
                     previewDiv.innerHTML = null;
@@ -244,6 +278,12 @@
                 </div>
             </div>
         {/if}
+    {#if canBlock}
+        <div class="content">
+            <p>This board type supports cell blocking. Click the board to block a cell.</p>
+        </div>
+        <button class="button apButton" on:click="{() => {$state.board.blocked = undefined; $state = $state;}}">Clear blocks</button>
+    {/if}
     </div>
     <div class="column">
         <div bind:this="{previewDiv}" id="previewDiv"></div>

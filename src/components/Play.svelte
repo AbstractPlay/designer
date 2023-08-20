@@ -48,6 +48,7 @@
             $state.pieces = JSON.parse(JSON.stringify(matrix));
             $state = $state;
         }
+        return false;
     };
 
     let previewDiv: HTMLDivElement;
