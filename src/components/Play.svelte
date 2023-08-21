@@ -71,11 +71,11 @@
         key: string,
     ) => {
         e.preventDefault();
-        if (selectedPiece === key) {
-            selectedPiece = undefined;
-        } else {
+        // if (selectedPiece === key) {
+        //     selectedPiece = undefined;
+        // } else {
             selectedPiece = key;
-        }
+        // }
         return false;
     };
     const toRep = (key: string): APRenderRepAbbreviated => {
