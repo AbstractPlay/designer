@@ -21,6 +21,7 @@ let initialState: APRenderRepAbbreviated = {
         },
     },
     pieces: null,
+    isInit: true,
 };
 if (localStorage.getItem("state") !== null) {
     initialState = JSON.parse(

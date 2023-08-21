@@ -67,22 +67,28 @@
             </li>
         </ul>
     </div>
-    {#if activeTab === "intro"}
-        <Intro />
-    {:else if activeTab === "board"}
-        <Board />
-    {:else if activeTab === "pieces"}
-        <Pieces />
-    {:else if activeTab === "play"}
-        <Play />
-    {:else if activeTab === "json"}
-        <Json />
-    {/if}
+    <div id="contentContainer">
+        {#if activeTab === "intro"}
+            <Intro />
+        {:else if activeTab === "board"}
+            <Board />
+        {:else if activeTab === "pieces"}
+            <Pieces />
+        {:else if activeTab === "play"}
+            <Play />
+        {:else if activeTab === "json"}
+            <Json />
+        {/if}
+    </div>
 </main>
 
 <style>
     .logo {
         height: 8em;
         padding: 1.5em;
+    }
+    #contentContainer {
+        width: 100%;
+        height: 110vh;
     }
 </style>

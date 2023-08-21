@@ -82,9 +82,8 @@
 
     let whichWidth: "abs" | "minmax" | undefined;
     let canBlock = false;
-    const handleStyleChange = () => {
+    const initVars = () => {
         if ($state.board.style === undefined) {
-            $state.board = { style: undefined };
             whichWidth = undefined;
         } else if (
             $state.board.style.startsWith("squares") ||
@@ -101,6 +100,28 @@
                 canBlock = true;
             }
             whichWidth = "abs";
+        } else if ($state.board.style === "circular-cobweb") {
+            whichWidth = "abs";
+        } else if ($state.board.style.startsWith("hex-of")) {
+            whichWidth = "minmax";
+        } else {
+            // go board here
+            whichWidth = undefined;
+        }
+        $state.pieces = null;
+        $state = $state;
+    };
+
+    const handleStyleChange = () => {
+        if ($state.board.style === undefined) {
+            $state.board = { style: undefined };
+        } else if (
+            $state.board.style.startsWith("squares") ||
+            $state.board.style.startsWith("vertex") ||
+            $state.board.style.startsWith("hex-odd") ||
+            $state.board.style.startsWith("hex-even") ||
+            $state.board.style === "snubsquare"
+        ) {
             $state.board = {
                 style: $state.board.style,
                 width: 8,
@@ -108,14 +129,12 @@
                 blocked: canBlock ? $state.board.blocked : undefined,
             };
         } else if ($state.board.style === "circular-cobweb") {
-            whichWidth = "abs";
             $state.board = {
                 style: $state.board.style,
                 width: 8,
                 height: 4,
             };
         } else if ($state.board.style.startsWith("hex-of")) {
-            whichWidth = "minmax";
             $state.board = {
                 style: $state.board.style,
                 minWidth: 4,
@@ -124,29 +143,31 @@
         } else {
             // go board here
             $state.board = { style: $state.board.style };
-            whichWidth = undefined;
         }
         $state.pieces = null;
         $state = $state;
+        initVars();
     };
 
     const updatePreview = () => {
         $state = $state;
     };
 
-
     const handleBoardClick = (row: number, col: number) => {
         console.log(`Row: ${row}, Col: ${col}`);
         // @ts-ignore
-        let lst: [{row: number, col: number}, ...{row: number, col: number}[]] = [];
-        if ( ("blocked" in $state.board) && ($state.board.blocked !== undefined) ) {
+        let lst: [
+            { row: number; col: number },
+            ...{ row: number; col: number }[],
+        ] = [];
+        if ("blocked" in $state.board && $state.board.blocked !== undefined) {
             lst = JSON.parse(JSON.stringify($state.board.blocked));
         }
-        const idx = lst.findIndex(p => p.col === col && p.row === row);
+        const idx = lst.findIndex((p) => p.col === col && p.row === row);
         if (idx >= 0) {
             lst.splice(idx, 1);
         } else {
-            lst.push({row, col});
+            lst.push({ row, col });
         }
         if (lst.length > 0) {
             $state.board.blocked = lst;
@@ -155,7 +176,7 @@
         }
         $state = $state;
         return false;
-    }
+    };
 
     let previewDiv: HTMLDivElement;
     onMount(() => {
@@ -178,7 +199,12 @@
                 }
             }
         });
-        handleStyleChange();
+        if ("isInit" in $state) {
+            delete $state.isInit;
+            handleStyleChange();
+        } else {
+            initVars();
+        }
     });
 </script>
 
@@ -278,12 +304,21 @@
                 </div>
             </div>
         {/if}
-    {#if canBlock}
-        <div class="content">
-            <p>This board type supports cell blocking. Click the board to block a cell.</p>
-        </div>
-        <button class="button apButton" on:click="{() => {$state.board.blocked = undefined; $state = $state;}}">Clear blocks</button>
-    {/if}
+        {#if canBlock}
+            <div class="content">
+                <p>
+                    This board type supports cell blocking. Click the board to
+                    block a cell.
+                </p>
+            </div>
+            <button
+                class="button apButton"
+                on:click="{() => {
+                    $state.board.blocked = undefined;
+                    $state = $state;
+                }}">Clear blocks</button
+            >
+        {/if}
     </div>
     <div class="column">
         <div bind:this="{previewDiv}" id="previewDiv"></div>
