@@ -1,5 +1,7 @@
 import { writable } from "svelte/store";
 import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
+import { stack } from "./writeStack";
+import deepclone from "rfdc/default";
 
 let initialState: APRenderRepAbbreviated = {
     renderer: "stacking-offset",
@@ -33,4 +35,5 @@ export const state = writable(initialState);
 
 state.subscribe((v) => {
     localStorage.setItem("state", JSON.stringify(v));
+    stack.update((s) => [...deepclone(s), v]);
 });

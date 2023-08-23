@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2023-08-23
+
+### Added
+
+* Board state is now saved as a stack of states. You can "undo," which will take you to the previous state. Every single board click creates a state, though. The system still does not understand what a "move" is. This is basically a domain-specific painting tool.
+
 ## [1.1.1] - 2023-08-21
 
 ### Fixed

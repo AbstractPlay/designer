@@ -1,5 +1,6 @@
 <script lang="ts">
     import { state } from "@/stores/writeState";
+    import { stack } from "@/stores/writeStack";
     import { peers } from "@/stores/writePeers";
     import { haveToken } from "@/stores/writeToken";
     import { render as APRender } from "@abstractplay/renderer";
@@ -167,7 +168,7 @@
 
 <div class="level">
     <div class="level-left">
-        <div class="level">
+        <div class="level-item">
             <div class="control">
                 <label class="checkbox">
                     <input type="checkbox" bind:checked="{stackingEnabled}" />
@@ -177,7 +178,20 @@
         </div>
     </div>
     <div class="level-right">
-        <div class="level">
+        <div class="level-item">
+            <div class="control">
+                <button
+                    class="button apButton is-small"
+                    on:click="{() => {
+                        stack.update((s) => s.slice(0, -3));
+                        if ($stack.length > 0) {
+                            $state = $stack[$stack.length - 1];
+                        }
+                    }}"><span class="icon"><i class="fa fa-undo" aria-hidden="true"></i></span></button
+                >
+            </div>
+        </div>
+        <div class="level-item">
             <div class="control">
                 <button
                     class="button apButton is-small"
