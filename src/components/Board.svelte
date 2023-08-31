@@ -150,6 +150,11 @@
     };
 
     const updatePreview = () => {
+        if (whichWidth === "minmax") {
+            if ($state.board.minWidth >= $state.board.maxWidth) {
+                $state.board.minWidth = $state.board.maxWidth - 1;
+            }
+        }
         $state = $state;
     };
 
