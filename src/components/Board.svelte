@@ -18,6 +18,7 @@
         | "hex-even-p"
         | "hex-odd-f"
         | "hex-even-f"
+        | "hex-slanted"
         | "hex-of-hex"
         | "hex-of-tri"
         | "hex-of-cir"
@@ -66,6 +67,10 @@
             "A rectangular grid of hexes with pointy tops and the even-numbered rows indented",
         ],
         [
+            "hex-slanted",
+            "A simple rectangle of hexes, slanted to the left"
+        ],
+        [
             "hex-of-hex",
             "A hexagonally shaped board consisting of hex-shaped cells, pieces placed in the cells",
         ],
@@ -90,12 +95,14 @@
             $state.board.style.startsWith("vertex") ||
             $state.board.style.startsWith("hex-odd") ||
             $state.board.style.startsWith("hex-even") ||
+            $state.board.style.startsWith("hex-slanted") ||
             $state.board.style === "snubsquare"
         ) {
             if (
                 $state.board.style.startsWith("squares") ||
                 $state.board.style.startsWith("hex-odd") ||
-                $state.board.style.startsWith("hex-even")
+                $state.board.style.startsWith("hex-even") ||
+                $state.board.style.startsWith("hex-slanted")
             ) {
                 canBlock = true;
             }
@@ -120,6 +127,7 @@
             $state.board.style.startsWith("vertex") ||
             $state.board.style.startsWith("hex-odd") ||
             $state.board.style.startsWith("hex-even") ||
+            $state.board.style.startsWith("hex-slanted") ||
             $state.board.style === "snubsquare"
         ) {
             $state.board = {
