@@ -87,7 +87,10 @@
 
     let whichWidth: "abs" | "minmax" | undefined;
     let canBlock = false;
+    let canAlternate = false;
     const initVars = () => {
+        canBlock = false;
+        canAlternate = false;
         if ($state.board.style === undefined) {
             whichWidth = undefined;
         } else if (
@@ -105,12 +108,16 @@
                 $state.board.style.startsWith("hex-slanted")
             ) {
                 canBlock = true;
+            } else {
+                canBlock = false;
             }
             whichWidth = "abs";
         } else if ($state.board.style === "circular-cobweb") {
             whichWidth = "abs";
         } else if ($state.board.style.startsWith("hex-of")) {
             whichWidth = "minmax";
+            canBlock = true;
+            canAlternate = true;
         } else {
             // go board here
             whichWidth = undefined;
@@ -147,6 +154,8 @@
                 style: $state.board.style,
                 minWidth: 4,
                 maxWidth: 7,
+                blocked: canBlock ? $state.board.blocked: undefined,
+                alternatingSymmetry: $state.board.alternatingSymmetry || false,
             };
         } else {
             // go board here
@@ -315,6 +324,17 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        {/if}
+        {#if canAlternate}
+            <div class="control">
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        bind:checked="{$state.board.alternatingSymmetry}"
+                    >
+                    Alternating Symmetry
+                </label>
             </div>
         {/if}
         {#if canBlock}
