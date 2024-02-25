@@ -88,6 +88,7 @@
     let whichWidth: "abs" | "minmax" | undefined;
     let canBlock = false;
     let canAlternate = false;
+    let hexhexLocked = true;
     const initVars = () => {
         canBlock = false;
         canAlternate = false;
@@ -170,6 +171,9 @@
         if (whichWidth === "minmax") {
             if ($state.board.minWidth >= $state.board.maxWidth) {
                 $state.board.minWidth = $state.board.maxWidth - 1;
+            }
+            if (hexhexLocked) {
+                $state.board.maxWidth = ($state.board.minWidth * 2) - 1;
             }
         }
         $state = $state;
@@ -320,8 +324,18 @@
                                 min="1"
                                 bind:value="{$state.board.maxWidth}"
                                 on:change="{updatePreview}"
+                                readonly={hexhexLocked}
                             />
                         </div>
+                    </div>
+                    <div class="control">
+                        <label class="checkbox">
+                            <input
+                                type="checkbox"
+                                bind:checked="{hexhexLocked}"
+                            />
+                            Lock to hexhex dimensions
+                          </label>
                     </div>
                 </div>
             </div>
