@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2024-02-25
+
+### Added
+
+* `hex-of-*` boards now support "alternating symmetry" where each edge of the hex alternates size.
+* Added a "lock to hexhex" checkbox for `hex-of-*` boards where, when checked, changing the minimum width automatically adjusts the max width.
+
 ## [1.2.0] - 2023-08-23
 
 ### Added
