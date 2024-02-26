@@ -169,9 +169,12 @@
 
     const updatePreview = () => {
         if (whichWidth === "minmax") {
-            if ($state.board.minWidth >= $state.board.maxWidth) {
-                $state.board.minWidth = $state.board.maxWidth - 1;
-            }
+            // if ($state.board.minWidth < 2) {
+            //     $state.board.minWidth = 2;
+            // }
+            // if ($state.board.minWidth >= $state.board.maxWidth) {
+            //     $state.board.minWidth = $state.board.maxWidth - 1;
+            // }
             if (hexhexLocked) {
                 $state.board.maxWidth = ($state.board.minWidth * 2) - 1;
             }
@@ -307,7 +310,7 @@
                                 type="number"
                                 min="1"
                                 bind:value="{$state.board.minWidth}"
-                                on:change="{updatePreview}"
+                                on:input="{updatePreview}"
                             />
                         </div>
                     </div>
@@ -323,7 +326,7 @@
                                 type="number"
                                 min="1"
                                 bind:value="{$state.board.maxWidth}"
-                                on:change="{updatePreview}"
+                                on:input="{updatePreview}"
                                 readonly={hexhexLocked}
                             />
                         </div>
