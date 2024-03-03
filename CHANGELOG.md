@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * `hex-of-*` boards now support "alternating symmetry" where each edge of the hex alternates size.
-* Added a "lock to hexhex" checkbox for `hex-of-*` boards where, when checked, changing the minimum width automatically adjusts the max width.
+* Added a checkbox for `hex-of-*` and `squares*` boards where, when checked, the board is forced to symmetrical (hexhex or square).
 
 ## [1.2.0] - 2023-08-23
 

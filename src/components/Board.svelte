@@ -88,7 +88,7 @@
     let whichWidth: "abs" | "minmax" | undefined;
     let canBlock = false;
     let canAlternate = false;
-    let hexhexLocked = true;
+    let symmetryLocked = true;
     const initVars = () => {
         canBlock = false;
         canAlternate = false;
@@ -175,12 +175,28 @@
             // if ($state.board.minWidth >= $state.board.maxWidth) {
             //     $state.board.minWidth = $state.board.maxWidth - 1;
             // }
-            if (hexhexLocked) {
+            if (symmetryLocked) {
                 $state.board.maxWidth = ($state.board.minWidth * 2) - 1;
+            }
+        } else if (whichWidth === "abs") {
+            if (symmetryLocked) {
+                $state.board.height = $state.board.width;
             }
         }
         $state = $state;
     };
+
+    const handleSymLockChange = () => {
+        // we've switched from unlocked to locked
+        if (symmetryLocked) {
+            if (whichWidth === "minmax") {
+                $state.board.maxWidth = ($state.board.minWidth * 2) - 1;
+            } else if (whichWidth === "abs") {
+                $state.board.height = $state.board.width;
+            }
+            $state = $state;
+        }
+    }
 
     const handleBoardClick = (row: number, col: number) => {
         console.log(`Row: ${row}, Col: ${col}`);
@@ -295,6 +311,16 @@
                             />
                         </div>
                     </div>
+                    <div class="control">
+                        <label class="checkbox">
+                            <input
+                                type="checkbox"
+                                bind:checked="{symmetryLocked}"
+                                on:change="{handleSymLockChange}"
+                            />
+                            Force square
+                          </label>
+                    </div>
                 </div>
             </div>
         {:else if whichWidth === "minmax"}
@@ -327,7 +353,7 @@
                                 min="1"
                                 bind:value="{$state.board.maxWidth}"
                                 on:input="{updatePreview}"
-                                readonly={hexhexLocked}
+                                readonly={symmetryLocked}
                             />
                         </div>
                     </div>
@@ -335,9 +361,10 @@
                         <label class="checkbox">
                             <input
                                 type="checkbox"
-                                bind:checked="{hexhexLocked}"
+                                bind:checked="{symmetryLocked}"
+                                on:change="{handleSymLockChange}"
                             />
-                            Lock to hexhex dimensions
+                            Force hexhex
                           </label>
                     </div>
                 </div>
