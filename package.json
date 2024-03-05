@@ -1,7 +1,7 @@
 {
     "name": "abstractplay-designer",
     "private": true,
-    "version": "1.2.2",
+    "version": "1.2.3",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -11,7 +11,8 @@
         "deploy": "npx serverless client deploy --no-confirm",
         "format": "prettier --write --plugin prettier-plugin-svelte .",
         "schemas": "npx json2ts -i src/schemas/renderModified.json -o src/schemas/renderModified.d.ts && npx json2ts -i src/schemas/messages.json -o src/schemas/messages.d.ts",
-        "full": "npm run schemas && npm run format && npm run build && npm run deploy"
+        "full": "npm run schemas && npm run format && npm run build && npm run deploy",
+        "npm-login": "npm login --scope=@abstractplay --auth-type=legacy --registry=https://npm.pkg.github.com"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.4.2",
@@ -28,7 +29,7 @@
         "vite": "^4.4.5"
     },
     "dependencies": {
-        "@abstractplay/renderer": "latest",
+        "@abstractplay/renderer": "^1.0.0-ci-8162616561.0",
         "nanoid": "^4.0.2",
         "peerjs": "^1.4.7",
         "rfdc": "^1.3.0"

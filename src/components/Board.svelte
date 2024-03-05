@@ -22,7 +22,10 @@
         | "hex-of-hex"
         | "hex-of-tri"
         | "hex-of-cir"
-        | "circular-cobweb";
+        | "circular-cobweb"
+        | "conhex-cells"
+        | "cairo-collinear"
+        | "cairo-catalan";
     const boardTypes = new Map<boardType, string>([
         [
             "squares",
@@ -83,12 +86,17 @@
             "A hexagonally shaped board consisting of circular cells, pieces placed in the cells",
         ],
         ["circular-cobweb", "A circular cobweb board"],
+        ["conhex-cells", "The standard ConHex board but where you can place pieces on the cells. The board must be square, and the width/height must be odd. The width/height refers not to the number of cells but the number of rows of dots that *would* be present on a traditional ConHex board."],
+        ["cairo-collinear", "A clean, pentagonal board. Height and width express *pairs* of nodes that alternate being orientated vertically and horizontally"],
+        ["cairo-catalan", "An alternate pentagonal tiling that duals the snubsquare board"]
     ]);
 
     let whichWidth: "abs" | "minmax" | undefined;
     let canBlock = false;
     let canAlternate = false;
     let symmetryLocked = true;
+    let invertOrientation = false;
+    let canInvertOrientation = false;
     const initVars = () => {
         canBlock = false;
         canAlternate = false;
@@ -100,17 +108,23 @@
             $state.board.style.startsWith("hex-odd") ||
             $state.board.style.startsWith("hex-even") ||
             $state.board.style.startsWith("hex-slanted") ||
-            $state.board.style === "snubsquare"
+            $state.board.style === "snubsquare" ||
+            $state.board.style === "conhex-cells" ||
+            $state.board.style.startsWith("cairo")
         ) {
             if (
                 $state.board.style.startsWith("squares") ||
                 $state.board.style.startsWith("hex-odd") ||
                 $state.board.style.startsWith("hex-even") ||
-                $state.board.style.startsWith("hex-slanted")
+                $state.board.style.startsWith("hex-slanted") ||
+                $state.board.style === "cairo-catalan"
             ) {
                 canBlock = true;
             } else {
                 canBlock = false;
+            }
+            if ($state.board.style === "cairo-collinear") {
+                canInvertOrientation = true;
             }
             whichWidth = "abs";
         } else if ($state.board.style === "circular-cobweb") {
@@ -127,6 +141,16 @@
         $state = $state;
     };
 
+    const handleInvertClick = () => {
+        if ($state.board.style === "cairo-collinear") {
+            if (invertOrientation) {
+                $state.board.cairoStart = "V";
+            } else {
+                $state.board.cairoStart = "H";
+            }
+        }
+    }
+
     const handleStyleChange = () => {
         if ($state.board.style === undefined) {
             $state.board = { style: undefined };
@@ -136,7 +160,8 @@
             $state.board.style.startsWith("hex-odd") ||
             $state.board.style.startsWith("hex-even") ||
             $state.board.style.startsWith("hex-slanted") ||
-            $state.board.style === "snubsquare"
+            $state.board.style === "snubsquare" ||
+            $state.board.style.startsWith("cairo")
         ) {
             $state.board = {
                 style: $state.board.style,
@@ -157,6 +182,12 @@
                 maxWidth: 7,
                 blocked: canBlock ? $state.board.blocked: undefined,
                 alternatingSymmetry: $state.board.alternatingSymmetry || false,
+            };
+        } else if ($state.board.style === "conhex-cells") {
+            $state.board = {
+                style: $state.board.style,
+                width: 11,
+                height: 11
             };
         } else {
             // go board here
@@ -378,6 +409,18 @@
                         bind:checked="{$state.board.alternatingSymmetry}"
                     >
                     Alternating Symmetry
+                </label>
+            </div>
+        {/if}
+        {#if canInvertOrientation}
+            <div class="control">
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        bind:checked="{invertOrientation}"
+                        on:change="{handleInvertClick}"
+                    >
+                    Start with vertical orientation
                 </label>
             </div>
         {/if}
