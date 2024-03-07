@@ -117,7 +117,7 @@
                 $state.board.style.startsWith("hex-odd") ||
                 $state.board.style.startsWith("hex-even") ||
                 $state.board.style.startsWith("hex-slanted") ||
-                $state.board.style === "cairo-catalan"
+                $state.board.style.startsWith("cairo")
             ) {
                 canBlock = true;
             } else {
@@ -323,7 +323,7 @@
                                 type="number"
                                 min="1"
                                 bind:value="{$state.board.width}"
-                                on:change="{updatePreview}"
+                                on:input="{updatePreview}"
                             />
                         </div>
                     </div>
@@ -338,7 +338,8 @@
                                 type="number"
                                 min="1"
                                 bind:value="{$state.board.height}"
-                                on:change="{updatePreview}"
+                                on:input="{updatePreview}"
+                                readonly={symmetryLocked}
                             />
                         </div>
                     </div>
