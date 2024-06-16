@@ -1,4 +1,5 @@
 service: abstractplay-designer
+org: perlkonig
 
 frameworkVersion: "2 || 3"
 
