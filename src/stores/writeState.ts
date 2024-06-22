@@ -1,9 +1,24 @@
 import { writable } from "svelte/store";
-import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
+import type { APRenderRep } from "@abstractplay/renderer";
 import { stack } from "./writeStack";
 import deepclone from "rfdc/default";
+import type { BoardBasic, BoardStyles } from "@abstractplay/renderer/build/schemas/schema";
 
-let initialState: APRenderRepAbbreviated = {
+export type SupportedBoards = Exclude<BoardStyles,
+                                        "squares-stacked"|
+                                        "pegboard"|
+                                        "sowing"|
+                                        "conhex-dots"
+                                      >
+export type BasicBoardModifed = BoardBasic & {
+    style: SupportedBoards;
+}
+export type RenderRepModified = APRenderRep & {
+    board: BasicBoardModifed;
+    isInit?: boolean;
+}
+
+let initialState: RenderRepModified = {
     renderer: "stacking-offset",
     board: {
         style: "squares-checkered",
@@ -13,12 +28,12 @@ let initialState: APRenderRepAbbreviated = {
     legend: {
         A: {
             name: "piece",
-            player: 1,
+            colour: 1,
             rotate: 0,
         },
         B: {
             name: "piece",
-            player: 2,
+            colour: 2,
             rotate: 0,
         },
     },
@@ -28,7 +43,7 @@ let initialState: APRenderRepAbbreviated = {
 if (localStorage.getItem("state") !== null) {
     initialState = JSON.parse(
         localStorage.getItem("state"),
-    ) as APRenderRepAbbreviated;
+    ) as RenderRepModified;
 }
 
 export const state = writable(initialState);

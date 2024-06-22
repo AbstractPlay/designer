@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { state } from "@/stores/writeState";
+    import { state, type RenderRepModified } from "@/stores/writeState";
     import { sheets } from "@abstractplay/renderer/src/sheets";
     import type {
-        APRenderRepAbbreviated,
         Glyph,
-    } from "@/schemas/renderModified";
+    } from "@abstractplay/renderer";
     import { onMount } from "svelte";
     import { customAlphabet } from "nanoid";
     const nanoid = customAlphabet(
@@ -50,7 +49,7 @@
         }
     };
 
-    let pcRender: APRenderRepAbbreviated;
+    let pcRender: RenderRepModified;
     $: if (glyphObj !== undefined) {
         const id = nanoid();
         if (
@@ -81,7 +80,7 @@
             };
         }
     }
-    const toRep = (key: string): APRenderRepAbbreviated => {
+    const toRep = (key: string): RenderRepModified => {
         return {
             board: null,
             legend: {
@@ -94,21 +93,13 @@
     let colourStr: string = "1";
     const handleColourChange = () => {
         if (colourStr !== undefined) {
-            if (
-                colourStr.startsWith("#") &&
-                (colourStr.length === 4 || colourStr.length === 7)
-            ) {
-                glyphObj.player = undefined;
+            const n = parseInt(colourStr, 10);
+            if (isNaN(n)) {
                 glyphObj.colour = colourStr;
-            } else if (!isNaN(parseInt(colourStr, 10))) {
-                glyphObj.colour = undefined;
-                glyphObj.player = parseInt(colourStr, 10);
             } else {
-                glyphObj.player = undefined;
-                glyphObj.colour = undefined;
+                glyphObj.colour = n;
             }
         } else {
-            glyphObj.player = undefined;
             glyphObj.colour = undefined;
         }
         glyphObj = glyphObj;

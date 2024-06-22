@@ -5,9 +5,8 @@
     import type { PeerRecord } from "@/stores/writePeers";
     import type { DataConnection } from "peerjs";
     import type { APDesignerClientMessages } from "@/schemas/messages";
-    import { state } from "@/stores/writeState";
+    import { state, type RenderRepModified } from "@/stores/writeState";
     import { haveToken } from "@/stores/writeToken";
-    import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
     import { onMount } from "svelte";
 
     let remotePeer: string;
@@ -152,7 +151,7 @@
                 };
                 sendDirectMsg(peerid, reply);
             } else if (msg.type === "gameReplace") {
-                $state = JSON.parse(msg.game) as APRenderRepAbbreviated;
+                $state = JSON.parse(msg.game) as RenderRepModified;
             } else if (msg.type === "giveToken") {
                 $haveToken = true;
             } else if (msg.type === "takeToken") {

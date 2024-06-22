@@ -1,32 +1,10 @@
 <script lang="ts">
-    import { state } from "@/stores/writeState";
+    import { state, type RenderRepModified, type SupportedBoards } from "@/stores/writeState";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
-    import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
     import { onMount } from "svelte";
 
-    type boardType =
-        | "squares"
-        | "squares-checkered"
-        | "squares-beveled"
-        | "snubsquare"
-        | "vertex"
-        | "vertex-cross"
-        | "vertex-fanorona"
-        | "go"
-        | "hex-odd-p"
-        | "hex-even-p"
-        | "hex-odd-f"
-        | "hex-even-f"
-        | "hex-slanted"
-        | "hex-of-hex"
-        | "hex-of-tri"
-        | "hex-of-cir"
-        | "circular-cobweb"
-        | "conhex-cells"
-        | "cairo-collinear"
-        | "cairo-catalan";
-    const boardTypes = new Map<boardType, string>([
+    const boardTypes = new Map<SupportedBoards, string>([
         [
             "squares",
             "A simple grid of squares, no shading, with pieces placed inside the cells",
@@ -40,7 +18,6 @@
             "snubsquare",
             "A unique combination of squares and triangles where most cells have five connections; pieces are placed on the vertices",
         ],
-        ["go", "A traditional Go board"],
         [
             "vertex",
             "A grid of squares, no shading, with pieces placed on the vertices of the lines",
@@ -88,7 +65,10 @@
         ["circular-cobweb", "A circular cobweb board"],
         ["conhex-cells", "The standard ConHex board but where you can place pieces on the cells. The board must be square, and the width/height must be odd. The width/height refers not to the number of cells but the number of rows of dots that *would* be present on a traditional ConHex board."],
         ["cairo-collinear", "A clean, pentagonal board. Height and width express *pairs* of nodes that alternate being orientated vertically and horizontally"],
-        ["cairo-catalan", "An alternate pentagonal tiling that duals the snubsquare board"]
+        ["cairo-catalan", "An alternate pentagonal tiling that duals the snubsquare board"],
+        ["conical-hex", "A slanted hex board stretched so the left column and bottom row overlap"],
+        ["conical-hex-narrow", "A slanted hex board stretched so the right column and bottom row overlap"],
+        ["pyramid-hex", "The bottom half of a hexhex board stretched so the left half of the top row overlaps with the right half"],
     ]);
 
     let whichWidth: "abs" | "minmax" | undefined;
@@ -127,12 +107,14 @@
                 canInvertOrientation = true;
             }
             whichWidth = "abs";
-        } else if ($state.board.style === "circular-cobweb") {
+        } else if ($state.board.style === "circular-cobweb" || $state.board.style.startsWith("conical-hex")) {
             whichWidth = "abs";
-        } else if ($state.board.style.startsWith("hex-of")) {
+        } else if ($state.board.style.startsWith("hex-of") || $state.board.style === "pyramid-hex") {
             whichWidth = "minmax";
-            canBlock = true;
-            canAlternate = true;
+            if ($state.board.style.startsWith("hex-of")) {
+                canBlock = true;
+                canAlternate = true;
+            }
         } else {
             // go board here
             whichWidth = undefined;
@@ -188,6 +170,18 @@
                 style: $state.board.style,
                 width: 11,
                 height: 11
+            };
+        } else if ($state.board.style.startsWith("conical-hex")) {
+            $state.board = {
+                style: $state.board.style,
+                width: 14,
+                height: 14
+            };
+        } else if ($state.board.style === "pyramid-hex") {
+            $state.board = {
+                style: $state.board.style,
+                minWidth: 14,
+                maxWidth: 14,
             };
         } else {
             // go board here
@@ -260,7 +254,7 @@
             if (previewDiv !== undefined && previewDiv !== null) {
                 const toRender = JSON.parse(
                     JSON.stringify(state),
-                ) as APRenderRepAbbreviated;
+                ) as RenderRepModified;
                 toRender.pieces = null;
                 const opts: IRenderOptions = {
                     divelem: previewDiv,
@@ -271,6 +265,8 @@
                     previewDiv.innerHTML = null;
                     APRender(toRender, opts);
                 } catch (err) {
+                    console.log(JSON.stringify(toRender));
+                    console.log(err);
                     previewDiv.innerHTML = `<p>Unable to render the board with the current parameters.</p>`;
                 }
             }

@@ -1,15 +1,15 @@
 <script lang="ts">
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
-    import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
     import { onMount } from "svelte";
     import { customAlphabet } from "nanoid";
+    import type { RenderRepModified } from "@/stores/writeState";
     const nanoid = customAlphabet(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
         5,
     );
 
-    export let renderrep: APRenderRepAbbreviated;
+    export let renderrep: RenderRepModified;
     export let options: IRenderOptions = {};
 
     let previewDiv: HTMLDivElement;
@@ -32,6 +32,7 @@
                 }`,
             );
         } catch (err) {
+            console.log(err);
             previewDiv.innerHTML = `<p>Unable to render the piece with the current parameters.</p>`;
         }
     });

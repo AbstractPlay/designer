@@ -1,52 +1,73 @@
 <script lang="ts">
-    import { state } from "@/stores/writeState";
+    import { state, type RenderRepModified } from "@/stores/writeState";
     import { stack } from "@/stores/writeStack";
     import { peers } from "@/stores/writePeers";
     import { haveToken } from "@/stores/writeToken";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
-    import type { APRenderRepAbbreviated } from "@/schemas/renderModified";
     import { afterUpdate } from "svelte";
     import PiecePreview from "./PiecePreview.svelte";
     import type { APDesignerClientMessages } from "@/schemas/messages";
     import Modal from "./Modal.svelte";
+    import type { MarkerFlood, Glyph } from "@abstractplay/renderer/build/schemas/schema";
 
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
         if (selectedPiece !== undefined) {
-            let matrix: string[][][] = [];
-            if ($state.pieces !== null) {
-                matrix = JSON.parse(
-                    JSON.stringify($state.pieces),
-                ) as string[][][];
-            }
-            // prefill the matrix as necessary
-            while (row >= matrix.length) {
-                matrix.push([[]]);
-            }
-            while (col >= matrix[row].length) {
-                matrix[row].push([]);
-            }
-
-            // add/remove piece
-            let stack = matrix[row][col];
-            if (
-                selectedPiece === "_eraser" ||
-                (stack.length === 1 &&
-                    !stackingEnabled &&
-                    stack[stack.length - 1] === selectedPiece)
-            ) {
-                stack.pop();
-            } else {
-                if (stackingEnabled) {
-                    stack.push(selectedPiece);
-                } else {
-                    matrix[row][col] = [selectedPiece];
+            if (floodEnabled) {
+                const colour = ($state.legend[selectedPiece] as Glyph).colour as string|number;
+                // I will only place one point per marker, to simplify this code
+                const markers: MarkerFlood[] = $state.board.markers as MarkerFlood[] || [];
+                const idx = markers.findIndex(m => m.points[0].col === col && m.points[0].row === row);
+                let prev: string|number|undefined;
+                if (idx !== -1) {
+                    prev = markers[idx].colour as number|string;
+                    markers.splice(idx, 1);
                 }
-            }
+                if (prev === undefined || prev !== colour) {
+                    markers.push({
+                        type: "flood",
+                        points: [{row, col}],
+                        colour,
+                        opacity: 1
+                    });
+                }
+                $state.board.markers = JSON.parse(JSON.stringify(markers));
+            } else {
+                let matrix: string[][][] = [];
+                if ($state.pieces !== null) {
+                    matrix = JSON.parse(
+                        JSON.stringify($state.pieces),
+                    ) as string[][][];
+                }
+                // prefill the matrix as necessary
+                while (row >= matrix.length) {
+                    matrix.push([[]]);
+                }
+                while (col >= matrix[row].length) {
+                    matrix[row].push([]);
+                }
 
-            // save
-            $state.pieces = JSON.parse(JSON.stringify(matrix));
+                // add/remove piece
+                let stack = matrix[row][col];
+                if (
+                    selectedPiece === "_eraser" ||
+                    (stack.length === 1 &&
+                        !stackingEnabled &&
+                        stack[stack.length - 1] === selectedPiece)
+                ) {
+                    stack.pop();
+                } else {
+                    if (stackingEnabled) {
+                        stack.push(selectedPiece);
+                    } else {
+                        matrix[row][col] = [selectedPiece];
+                    }
+                }
+
+                // save
+                $state.pieces = JSON.parse(JSON.stringify(matrix));
+            }
             $state = $state;
         }
         return false;
@@ -56,6 +77,7 @@
     afterUpdate(() => {
         const opts: IRenderOptions = {
             divelem: previewDiv,
+            // divid: "previewDiv",
             boardClick,
         };
         try {
@@ -79,7 +101,7 @@
         // }
         return false;
     };
-    const toRep = (key: string): APRenderRepAbbreviated => {
+    const toRep = (key: string): RenderRepModified => {
         return {
             board: null,
             legend: {
@@ -90,6 +112,7 @@
     };
 
     let stackingEnabled = false;
+    let floodEnabled = false;
 
     const onKeyDown = (event: KeyboardEvent) => {
         if (event.repeat) return;
@@ -108,12 +131,16 @@
                 "Delete",
                 "s",
                 "S",
+                "f",
+                "F"
             ].includes(event.key)
         ) {
             if (event.key === "Delete" || event.key === "0") {
                 handlePcSelect(event, "_eraser");
             } else if (event.key === "s" || event.key === "S") {
                 stackingEnabled = !stackingEnabled;
+            } else if (event.key === "f" || event.key === "F") {
+                floodEnabled = !floodEnabled;
             } else {
                 const keys = Object.keys($state.legend);
                 if (keys.length > 0) {
@@ -176,6 +203,14 @@
                 </label>
             </div>
         </div>
+        <div class="level-item">
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" bind:checked="{floodEnabled}" />
+                    Enable flood fill?
+                </label>
+            </div>
+        </div>
     </div>
     <div class="level-right">
         <div class="level-item">
@@ -197,6 +232,7 @@
                     class="button apButton is-small"
                     on:click="{() => {
                         $state.pieces = null;
+                        delete $state.board.markers;
                         $state = $state;
                     }}">Clear board</button
                 >
