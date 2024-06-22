@@ -10,7 +10,7 @@
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "deploy": "npx serverless client deploy --no-confirm",
         "format": "prettier --write --plugin prettier-plugin-svelte .",
-        "schemas": "npx json2ts -i src/schemas/renderModified.json -o src/schemas/renderModified.d.ts && npx json2ts -i src/schemas/messages.json -o src/schemas/messages.d.ts",
+        "schemas": "npx json2ts -i src/schemas/messages.json -o src/schemas/messages.d.ts",
         "full": "npm run schemas && npm run format && npm run build && npm run deploy",
         "npm-login": "npm login --scope=@abstractplay --auth-type=legacy --registry=https://npm.pkg.github.com"
     },
