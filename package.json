@@ -29,7 +29,7 @@
         "vite": "^4.4.5"
     },
     "dependencies": {
-        "@abstractplay/renderer": "^1.0.0-ci-9628042321.0",
+        "@abstractplay/renderer": "^1.0.0-ci-9628243228.0",
         "nanoid": "^4.0.2",
         "peerjs": "^1.4.7",
         "rfdc": "^1.3.0"
