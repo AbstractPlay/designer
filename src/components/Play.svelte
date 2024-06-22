@@ -5,18 +5,11 @@
     import { haveToken } from "@/stores/writeToken";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
-    import { afterUpdate, onMount } from "svelte";
+    import { afterUpdate } from "svelte";
     import PiecePreview from "./PiecePreview.svelte";
     import type { APDesignerClientMessages } from "@/schemas/messages";
     import Modal from "./Modal.svelte";
     import type { MarkerFlood, Glyph } from "@abstractplay/renderer/build/schemas/schema";
-
-    onMount(() => {
-        if ($state.board.style.startsWith("vertex") || $state.board.style === "snubsquare") {
-            floodSupported = false;
-            floodEnabled = false;
-        }
-    });
 
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
@@ -120,7 +113,6 @@
 
     let stackingEnabled = false;
     let floodEnabled = false;
-    let floodSupported = true;
 
     const onKeyDown = (event: KeyboardEvent) => {
         if (event.repeat) return;
@@ -211,7 +203,6 @@
                 </label>
             </div>
         </div>
-        {#if floodSupported}
         <div class="level-item">
             <div class="control">
                 <label class="checkbox">
@@ -220,7 +211,6 @@
                 </label>
             </div>
         </div>
-        {/if}
     </div>
     <div class="level-right">
         <div class="level-item">
