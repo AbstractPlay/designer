@@ -6,6 +6,7 @@
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
     import { afterUpdate, onMount } from "svelte";
+    import { nanoid } from "nanoid";
     import PiecePreview from "./PiecePreview.svelte";
     import type { APDesignerClientMessages } from "@/schemas/messages";
     import Modal from "./Modal.svelte";
@@ -86,7 +87,6 @@
     afterUpdate(() => {
         const opts: IRenderOptions = {
             divelem: previewDiv,
-            // divid: "previewDiv",
             boardClick,
         };
         try {
@@ -111,12 +111,13 @@
         return false;
     };
     const toRep = (key: string): RenderRepModified => {
+        const newkey = nanoid(5);
         return {
             board: null,
             legend: {
-                [key]: $state.legend[key],
+                [newkey]: $state.legend[key],
             },
-            pieces: `${key}`,
+            pieces: `${newkey}`,
         };
     };
 
@@ -203,7 +204,7 @@
     <p>
         On desktop, press the keys 1–9 to select one of the first nine pieces in
         the legend. Pressing 0 or the Delete key will select the eraser. Use the
-        S key to toggle stacking.
+        S key to toggle stacking and the F key to toggle flood filling.
     </p>
 </div>
 
@@ -333,7 +334,7 @@
         {/if}
     </div>
     <div class="column">
-        <div bind:this="{previewDiv}" id="previewDiv" class="box"></div>
+        <div bind:this="{previewDiv}" class="box"></div>
     </div>
 </div>
 
