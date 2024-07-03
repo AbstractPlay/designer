@@ -94,6 +94,7 @@
         ) {
             if (
                 $state.board.style.startsWith("squares") ||
+                $state.board.style.startsWith("vertex") ||
                 $state.board.style.startsWith("hex-odd") ||
                 $state.board.style.startsWith("hex-even") ||
                 $state.board.style.startsWith("hex-slanted") ||
