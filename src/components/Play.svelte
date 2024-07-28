@@ -6,7 +6,11 @@
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
     import { afterUpdate, onMount } from "svelte";
-    import { nanoid } from "nanoid";
+    import { customAlphabet } from "nanoid";
+    const nanoid = customAlphabet(
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        5,
+    );
     import PiecePreview from "./PiecePreview.svelte";
     import type { APDesignerClientMessages } from "@/schemas/messages";
     import Modal from "./Modal.svelte";
