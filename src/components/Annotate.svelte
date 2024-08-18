@@ -10,7 +10,12 @@
 
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
-        currentTargets = [...currentTargets, [col, row]];
+        const idx = currentTargets.findIndex(t => t[0] === col && t[1] === row);
+        if (idx === -1) {
+            currentTargets = [...currentTargets, [col, row]];
+        } else {
+            currentTargets = [...currentTargets.slice(0, idx), ...currentTargets.slice(idx+1)];
+        }
         return false;
     };
 
@@ -212,7 +217,7 @@
                 {/if}
                 <div class="field">
                     <div class="content">
-                        <p>Targets:</p>
+                        <p>Targets <span style="font-size: smaller">(click to add/remove)</span>:</p>
                         <ul>
                             {#each currentTargets as target}
                                 <li>{target[0]}, {target[1]}</li>
