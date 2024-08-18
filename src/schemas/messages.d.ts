@@ -9,28 +9,28 @@
  * Permissible messages to be passed between peers
  */
 export type APDesignerClientMessages =
-  | {
-      type: "display";
-      name: string;
-    }
-  | {
-      type: "peers";
-      peers: string[];
-    }
-  | {
-      type: "askdisplay";
-    }
-  | {
-      type: "gameReplace";
-      game: string;
-      msg?: string;
-    }
-  | {
-      type: "notifyAbandon";
-    }
-  | {
-      type: "giveToken";
-    }
-  | {
-      type: "takeToken";
-    };
+    | {
+          type: "display";
+          name: string;
+      }
+    | {
+          type: "peers";
+          peers: string[];
+      }
+    | {
+          type: "askdisplay";
+      }
+    | {
+          type: "gameReplace";
+          game: string;
+          msg?: string;
+      }
+    | {
+          type: "notifyAbandon";
+      }
+    | {
+          type: "giveToken";
+      }
+    | {
+          type: "takeToken";
+      };

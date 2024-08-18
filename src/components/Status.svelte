@@ -22,7 +22,7 @@
 
     const updatePeers = (
         lst: PeerRecord[],
-        conn: DataConnection,
+        conn: DataConnection
     ): PeerRecord[] => {
         // Update the actual list of peers
         const idx = lst.findIndex((rec) => rec.id === conn.peer);
@@ -38,7 +38,7 @@
 
         // Add handlers
         conn.on("data", (data) =>
-            handleMsg(data as APDesignerClientMessages, conn.peer),
+            handleMsg(data as APDesignerClientMessages, conn.peer)
         );
         conn.on("close", () => {
             peers.update((lst) => deletePeer(lst, conn.peer));
@@ -100,7 +100,7 @@
         id = "";
     });
     $peer.on("connection", (conn) =>
-        conn.on("open", () => peers.update((lst) => updatePeers(lst, conn))),
+        conn.on("open", () => peers.update((lst) => updatePeers(lst, conn)))
     );
 
     const sendDirectMsg = (peerid: string, msg: APDesignerClientMessages) => {
@@ -116,7 +116,7 @@
                 "Malformed message!\nPeer ID: " +
                     peerid +
                     "\nMsg: " +
-                    JSON.stringify(msg),
+                    JSON.stringify(msg)
             );
         } else {
             if (msg.type === "display") {
@@ -127,7 +127,7 @@
                             msg.name =
                                 "Random" +
                                 Math.floor(
-                                    Math.random() * 9000 + 1000,
+                                    Math.random() * 9000 + 1000
                                 ).toString();
                         }
                         lst[idx].alias = msg.name;
@@ -161,7 +161,7 @@
                     "Unrecognized command!\nPeer ID: " +
                         peerid +
                         "\nMsg: " +
-                        JSON.stringify(msg),
+                        JSON.stringify(msg)
                 );
             }
         }
@@ -212,7 +212,7 @@
             },
             function (err) {
                 console.error("Async: Could not copy text: ", err);
-            },
+            }
         );
     };
 

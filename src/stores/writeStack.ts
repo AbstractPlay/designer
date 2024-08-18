@@ -5,7 +5,7 @@ import deepclone from "rfdc/default";
 let initialState: RenderRepModified[] = [];
 if (localStorage.getItem("stack") !== null) {
     initialState = JSON.parse(
-        localStorage.getItem("stack"),
+        localStorage.getItem("stack")
     ) as RenderRepModified[];
 }
 

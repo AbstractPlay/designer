@@ -1,14 +1,12 @@
 <script lang="ts">
     import { state, type RenderRepModified } from "@/stores/writeState";
     import { sheets } from "@abstractplay/renderer/src/sheets";
-    import type {
-        Glyph,
-    } from "@abstractplay/renderer";
+    import type { Glyph } from "@abstractplay/renderer";
     import { onMount } from "svelte";
     import { customAlphabet } from "nanoid";
     const nanoid = customAlphabet(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        5,
+        5
     );
     import PiecePreview from "./PiecePreview.svelte";
 
@@ -29,7 +27,7 @@
             const sheet = sheets.get(selectedSheet);
             if (sheet !== undefined) {
                 glyphNames = [...sheet.glyphs.keys()].sort((a, b) =>
-                    a.localeCompare(b),
+                    a.localeCompare(b)
                 );
             }
         }

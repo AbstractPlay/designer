@@ -6,7 +6,7 @@
     import type { RenderRepModified } from "@/stores/writeState";
     const nanoid = customAlphabet(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        5,
+        5
     );
 
     export let renderrep: RenderRepModified;
@@ -30,7 +30,7 @@
                     "viewBox",
                     `${x - buffer} ${y - buffer} ${width + buffer * 2} ${
                         height + buffer * 2
-                    }`,
+                    }`
                 );
             } catch (err) {
                 console.log(err);

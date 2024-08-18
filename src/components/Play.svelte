@@ -9,15 +9,21 @@
     import { customAlphabet } from "nanoid";
     const nanoid = customAlphabet(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        5,
+        5
     );
     import PiecePreview from "./PiecePreview.svelte";
     import type { APDesignerClientMessages } from "@/schemas/messages";
     import Modal from "./Modal.svelte";
-    import type { MarkerFlood, Glyph } from "@abstractplay/renderer/build/schemas/schema";
+    import type {
+        MarkerFlood,
+        Glyph,
+    } from "@abstractplay/renderer/build/schemas/schema";
 
     onMount(() => {
-        if ($state.board.style.startsWith("vertex") || $state.board.style === "snubsquare") {
+        if (
+            $state.board.style.startsWith("vertex") ||
+            $state.board.style === "snubsquare"
+        ) {
             floodSupported = false;
             floodEnabled = false;
         } else if ($state.board !== undefined) {
@@ -29,21 +35,25 @@
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
         if (selectedPiece !== undefined) {
             if (floodEnabled) {
-                const colour = ($state.legend[selectedPiece] as Glyph).colour as string|number;
+                const colour = ($state.legend[selectedPiece] as Glyph)
+                    .colour as string | number;
                 // I will only place one point per marker, to simplify this code
-                const markers: MarkerFlood[] = $state.board.markers as MarkerFlood[] || [];
-                const idx = markers.findIndex(m => m.points[0].col === col && m.points[0].row === row);
-                let prev: string|number|undefined;
+                const markers: MarkerFlood[] =
+                    ($state.board.markers as MarkerFlood[]) || [];
+                const idx = markers.findIndex(
+                    (m) => m.points[0].col === col && m.points[0].row === row
+                );
+                let prev: string | number | undefined;
                 if (idx !== -1) {
-                    prev = markers[idx].colour as number|string;
+                    prev = markers[idx].colour as number | string;
                     markers.splice(idx, 1);
                 }
                 if (prev === undefined || prev !== colour) {
                     markers.push({
                         type: "flood",
-                        points: [{row, col}],
+                        points: [{ row, col }],
                         colour,
-                        opacity: 1
+                        opacity: 1,
                     });
                 }
                 $state.board.markers = JSON.parse(JSON.stringify(markers));
@@ -51,7 +61,7 @@
                 let matrix: string[][][] = [];
                 if ($state.pieces !== null) {
                     matrix = JSON.parse(
-                        JSON.stringify($state.pieces),
+                        JSON.stringify($state.pieces)
                     ) as string[][][];
                 }
                 // prefill the matrix as necessary
@@ -104,13 +114,13 @@
     let selectedPiece: string | undefined;
     const handlePcSelect = (
         e: MouseEvent | TouchEvent | KeyboardEvent,
-        key: string,
+        key: string
     ) => {
         e.preventDefault();
         // if (selectedPiece === key) {
         //     selectedPiece = undefined;
         // } else {
-            selectedPiece = key;
+        selectedPiece = key;
         // }
         return false;
     };
@@ -147,7 +157,7 @@
                 "s",
                 "S",
                 "f",
-                "F"
+                "F",
             ].includes(event.key)
         ) {
             if (event.key === "Delete" || event.key === "0") {
@@ -223,14 +233,14 @@
             </div>
         </div>
         {#if floodSupported}
-        <div class="level-item">
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" bind:checked="{floodEnabled}" />
-                    Enable flood fill?
-                </label>
+            <div class="level-item">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" bind:checked="{floodEnabled}" />
+                        Enable flood fill?
+                    </label>
+                </div>
             </div>
-        </div>
         {/if}
     </div>
     <div class="level-right">
@@ -243,7 +253,10 @@
                         if ($stack.length > 0) {
                             $state = $stack[$stack.length - 1];
                         }
-                    }}"><span class="icon"><i class="fa fa-undo" aria-hidden="true"></i></span></button
+                    }}"
+                    ><span class="icon"
+                        ><i class="fa fa-undo" aria-hidden="true"></i></span
+                    ></button
                 >
             </div>
         </div>

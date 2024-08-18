@@ -1,5 +1,9 @@
 <script lang="ts">
-    import { state, type RenderRepModified, type SupportedBoards } from "@/stores/writeState";
+    import {
+        state,
+        type RenderRepModified,
+        type SupportedBoards,
+    } from "@/stores/writeState";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
     import { onMount } from "svelte";
@@ -46,10 +50,7 @@
             "hex-even-p",
             "A rectangular grid of hexes with pointy tops and the even-numbered rows indented",
         ],
-        [
-            "hex-slanted",
-            "A simple rectangle of hexes, slanted to the left"
-        ],
+        ["hex-slanted", "A simple rectangle of hexes, slanted to the left"],
         [
             "hex-of-hex",
             "A hexagonally shaped board consisting of hex-shaped cells, pieces placed in the cells",
@@ -63,12 +64,30 @@
             "A hexagonally shaped board consisting of circular cells, pieces placed in the cells",
         ],
         ["circular-cobweb", "A circular cobweb board"],
-        ["conhex-cells", "The standard ConHex board but where you can place pieces on the cells. The board must be square, and the width/height must be odd. The width/height refers not to the number of cells but the number of rows of dots that *would* be present on a traditional ConHex board."],
-        ["cairo-collinear", "A clean, pentagonal board. Height and width express *pairs* of nodes that alternate being orientated vertically and horizontally"],
-        ["cairo-catalan", "An alternate pentagonal tiling that duals the snubsquare board"],
-        ["conical-hex", "A slanted hex board stretched so the left column and bottom row overlap"],
-        ["conical-hex-narrow", "A slanted hex board stretched so the right column and bottom row overlap"],
-        ["pyramid-hex", "The bottom half of a hexhex board stretched so the left half of the top row overlaps with the right half"],
+        [
+            "conhex-cells",
+            "The standard ConHex board but where you can place pieces on the cells. The board must be square, and the width/height must be odd. The width/height refers not to the number of cells but the number of rows of dots that *would* be present on a traditional ConHex board.",
+        ],
+        [
+            "cairo-collinear",
+            "A clean, pentagonal board. Height and width express *pairs* of nodes that alternate being orientated vertically and horizontally",
+        ],
+        [
+            "cairo-catalan",
+            "An alternate pentagonal tiling that duals the snubsquare board",
+        ],
+        [
+            "conical-hex",
+            "A slanted hex board stretched so the left column and bottom row overlap",
+        ],
+        [
+            "conical-hex-narrow",
+            "A slanted hex board stretched so the right column and bottom row overlap",
+        ],
+        [
+            "pyramid-hex",
+            "The bottom half of a hexhex board stretched so the left half of the top row overlaps with the right half",
+        ],
     ]);
 
     let whichWidth: "abs" | "minmax" | undefined;
@@ -108,9 +127,15 @@
                 canInvertOrientation = true;
             }
             whichWidth = "abs";
-        } else if ($state.board.style === "circular-cobweb" || $state.board.style.startsWith("conical-hex")) {
+        } else if (
+            $state.board.style === "circular-cobweb" ||
+            $state.board.style.startsWith("conical-hex")
+        ) {
             whichWidth = "abs";
-        } else if ($state.board.style.startsWith("hex-of") || $state.board.style === "pyramid-hex") {
+        } else if (
+            $state.board.style.startsWith("hex-of") ||
+            $state.board.style === "pyramid-hex"
+        ) {
             whichWidth = "minmax";
             if ($state.board.style.startsWith("hex-of")) {
                 canBlock = true;
@@ -132,7 +157,7 @@
                 $state.board.cairoStart = "H";
             }
         }
-    }
+    };
 
     const handleStyleChange = () => {
         if ($state.board.style === undefined) {
@@ -163,20 +188,20 @@
                 style: $state.board.style,
                 minWidth: 4,
                 maxWidth: 7,
-                blocked: canBlock ? $state.board.blocked: undefined,
+                blocked: canBlock ? $state.board.blocked : undefined,
                 alternatingSymmetry: $state.board.alternatingSymmetry || false,
             };
         } else if ($state.board.style === "conhex-cells") {
             $state.board = {
                 style: $state.board.style,
                 width: 11,
-                height: 11
+                height: 11,
             };
         } else if ($state.board.style.startsWith("conical-hex")) {
             $state.board = {
                 style: $state.board.style,
                 width: 14,
-                height: 14
+                height: 14,
             };
         } else if ($state.board.style === "pyramid-hex") {
             $state.board = {
@@ -189,6 +214,7 @@
             $state.board = { style: $state.board.style };
         }
         $state.pieces = null;
+        $state.annotations = [];
         $state = $state;
         initVars();
     };
@@ -202,7 +228,7 @@
             //     $state.board.minWidth = $state.board.maxWidth - 1;
             // }
             if (symmetryLocked) {
-                $state.board.maxWidth = ($state.board.minWidth * 2) - 1;
+                $state.board.maxWidth = $state.board.minWidth * 2 - 1;
             }
         } else if (whichWidth === "abs") {
             if (symmetryLocked) {
@@ -216,13 +242,13 @@
         // we've switched from unlocked to locked
         if (symmetryLocked) {
             if (whichWidth === "minmax") {
-                $state.board.maxWidth = ($state.board.minWidth * 2) - 1;
+                $state.board.maxWidth = $state.board.minWidth * 2 - 1;
             } else if (whichWidth === "abs") {
                 $state.board.height = $state.board.width;
             }
             $state = $state;
         }
-    }
+    };
 
     const handleBoardClick = (row: number, col: number) => {
         console.log(`Row: ${row}, Col: ${col}`);
@@ -254,7 +280,7 @@
         state.subscribe((state) => {
             if (previewDiv !== undefined && previewDiv !== null) {
                 const toRender = JSON.parse(
-                    JSON.stringify(state),
+                    JSON.stringify(state)
                 ) as RenderRepModified;
                 toRender.pieces = null;
                 const opts: IRenderOptions = {
@@ -336,7 +362,7 @@
                                 min="1"
                                 bind:value="{$state.board.height}"
                                 on:input="{updatePreview}"
-                                readonly={symmetryLocked}
+                                readonly="{symmetryLocked}"
                             />
                         </div>
                     </div>
@@ -348,7 +374,7 @@
                                 on:change="{handleSymLockChange}"
                             />
                             Force square
-                          </label>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -382,7 +408,7 @@
                                 min="1"
                                 bind:value="{$state.board.maxWidth}"
                                 on:input="{updatePreview}"
-                                readonly={symmetryLocked}
+                                readonly="{symmetryLocked}"
                             />
                         </div>
                     </div>
@@ -394,7 +420,7 @@
                                 on:change="{handleSymLockChange}"
                             />
                             Force hexhex
-                          </label>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -405,7 +431,7 @@
                     <input
                         type="checkbox"
                         bind:checked="{$state.board.alternatingSymmetry}"
-                    >
+                    />
                     Alternating Symmetry
                 </label>
             </div>
@@ -417,7 +443,7 @@
                         type="checkbox"
                         bind:checked="{invertOrientation}"
                         on:change="{handleInvertClick}"
-                    >
+                    />
                     Start with vertical orientation
                 </label>
             </div>

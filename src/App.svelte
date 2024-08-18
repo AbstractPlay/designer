@@ -7,12 +7,11 @@
     import Play from "./components/Play.svelte";
     import Status from "./components/Status.svelte";
     import PeerList from "./components/PeerList.svelte";
+    import Annotate from "./components/Annotate.svelte";
 
-    let activeTab: "intro" | "board" | "pieces" | "play" | "json" = "intro";
-    const handleClick = (
-        e: MouseEvent | TouchEvent,
-        key: "intro" | "board" | "pieces" | "play" | "json",
-    ) => {
+    type Tab = "intro" | "board" | "pieces" | "play" | "json" | "annotate";
+    let activeTab: Tab = "intro";
+    const handleClick = (e: MouseEvent | TouchEvent, key: Tab) => {
         e.preventDefault();
         activeTab = key;
         return false;
@@ -62,6 +61,9 @@
             <li class="{activeTab === 'play' ? 'is-active' : ''}">
                 <a on:click="{(e) => handleClick(e, 'play')}"> Play </a>
             </li>
+            <li class="{activeTab === 'annotate' ? 'is-active' : ''}">
+                <a on:click="{(e) => handleClick(e, 'annotate')}"> Annotate </a>
+            </li>
             <li class="{activeTab === 'json' ? 'is-active' : ''}">
                 <a on:click="{(e) => handleClick(e, 'json')}"> JSON </a>
             </li>
@@ -78,6 +80,8 @@
             <Play />
         {:else if activeTab === "json"}
             <Json />
+        {:else if activeTab === "annotate"}
+            <Annotate />
         {/if}
     </div>
 </main>
