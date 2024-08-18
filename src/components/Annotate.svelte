@@ -97,6 +97,8 @@
         currentType = undefined;
         currentTargets = [];
         currentNote = undefined;
+        currentColour = "#000";
+        isDashed = false;
         newNote = false;
     };
 
