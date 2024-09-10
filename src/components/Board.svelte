@@ -23,6 +23,10 @@
             "A unique combination of squares and triangles where most cells have five connections; pieces are placed on the vertices",
         ],
         [
+            "squares-diamonds",
+            "A square board where the vertices are also spaces. In the designer, pieces cannot be placed anywhere. You can only use flood fill.",
+        ],
+        [
             "vertex",
             "A grid of squares, no shading, with pieces placed on the vertices of the lines",
         ],
@@ -96,6 +100,7 @@
     let symmetryLocked = true;
     let invertOrientation = false;
     let canInvertOrientation = false;
+    let startDiamonds = false;
     const initVars = () => {
         canBlock = false;
         canAlternate = false;
@@ -155,6 +160,16 @@
                 $state.board.cairoStart = "V";
             } else {
                 $state.board.cairoStart = "H";
+            }
+        }
+    };
+
+    const handleSDChange = () => {
+        if ($state.board.style === "squares-diamonds") {
+            if (startDiamonds) {
+                $state.board.sdStart = "D";
+            } else {
+                $state.board.sdStart = "S";
             }
         }
     };
@@ -423,6 +438,18 @@
                         </label>
                     </div>
                 </div>
+            </div>
+        {/if}
+        {#if $state.board.style === "squares-diamonds"}
+            <div class="control">
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        bind:checked="{startDiamonds}"
+                        on:change="{handleSDChange}"
+                    />
+                    Start with diamonds
+                </label>
             </div>
         {/if}
         {#if canAlternate}

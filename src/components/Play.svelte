@@ -139,6 +139,10 @@
     let floodEnabled = false;
     let floodSupported = true;
 
+    $: if (!floodEnabled && $state.board.style === "squares-diamonds") {
+        floodEnabled = true;
+    }
+
     const onKeyDown = (event: KeyboardEvent) => {
         if (event.repeat) return;
         if (
