@@ -27,6 +27,10 @@
             "A snubsquare board where you can also place at the midpoints of squares.",
         ],
         [
+            "snubsquare-cells",
+            "A snubsquare board where you place in the spaces instead of on the vertices. The width and height refer to the number of regular vertices.",
+        ],
+        [
             "squares-diamonds",
             "A square board where the vertices are also spaces. In the designer, pieces cannot be placed anywhere. You can only use flood fill.",
         ],
@@ -116,7 +120,7 @@
             $state.board.style.startsWith("hex-odd") ||
             $state.board.style.startsWith("hex-even") ||
             $state.board.style.startsWith("hex-slanted") ||
-            $state.board.style === "snubsquare" ||
+            $state.board.style.startsWith("snubsquare") ||
             $state.board.style === "onyx" ||
             $state.board.style === "conhex-cells" ||
             $state.board.style.startsWith("cairo")
@@ -127,7 +131,8 @@
                 $state.board.style.startsWith("hex-odd") ||
                 $state.board.style.startsWith("hex-even") ||
                 $state.board.style.startsWith("hex-slanted") ||
-                $state.board.style.startsWith("cairo")
+                $state.board.style.startsWith("cairo") ||
+                $state.board.style === "snubsquare-cells"
             ) {
                 canBlock = true;
             } else {
@@ -136,7 +141,7 @@
             if ($state.board.style === "cairo-collinear") {
                 canInvertOrientation = true;
             }
-            if ($state.board.style === "snubsquare") {
+            if ($state.board.style.startsWith("snubsquare")) {
                 $state.board.snubStart = "S";
             }
             if ($state.board.style === "onyx") {
@@ -194,7 +199,7 @@
             $state.board.style.startsWith("hex-odd") ||
             $state.board.style.startsWith("hex-even") ||
             $state.board.style.startsWith("hex-slanted") ||
-            $state.board.style === "snubsquare" ||
+            $state.board.style.startsWith("snubsquare") ||
             $state.board.style === "onyx" ||
             $state.board.style.startsWith("cairo")
         ) {
@@ -204,7 +209,7 @@
                 height: 8,
                 blocked: canBlock ? $state.board.blocked : undefined,
             };
-            if ($state.board.style === "snubsquare") {
+            if ($state.board.style.startsWith("snubsquare")) {
                 $state.board.snubStart = "S";
             } else if ($state.board.style === "onyx") {
                 $state.board.snubStart = "T";
@@ -494,7 +499,7 @@
                 </label>
             </div>
         {/if}
-        {#if $state.board.style === "snubsquare" || $state.board.style === "onyx"}
+        {#if $state.board.style.startsWith("snubsquare") || $state.board.style === "onyx"}
             <div class="control">
                 <button
                     class="button apButton"

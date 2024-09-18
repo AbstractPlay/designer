@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added support for the new `onyx` board.
+-   Added support for the new `snubsquare-cells` board.
 
 ## [1.4.1] - 2024-09-10
 
