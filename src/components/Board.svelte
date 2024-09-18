@@ -23,6 +23,10 @@
             "A unique combination of squares and triangles where most cells have five connections; pieces are placed on the vertices",
         ],
         [
+            "onyx",
+            "A snubsquare board where you can also place at the midpoints of squares.",
+        ],
+        [
             "squares-diamonds",
             "A square board where the vertices are also spaces. In the designer, pieces cannot be placed anywhere. You can only use flood fill.",
         ],
@@ -113,6 +117,7 @@
             $state.board.style.startsWith("hex-even") ||
             $state.board.style.startsWith("hex-slanted") ||
             $state.board.style === "snubsquare" ||
+            $state.board.style === "onyx" ||
             $state.board.style === "conhex-cells" ||
             $state.board.style.startsWith("cairo")
         ) {
@@ -130,6 +135,12 @@
             }
             if ($state.board.style === "cairo-collinear") {
                 canInvertOrientation = true;
+            }
+            if ($state.board.style === "snubsquare") {
+                $state.board.snubStart = "S";
+            }
+            if ($state.board.style === "onyx") {
+                $state.board.snubStart = "T";
             }
             whichWidth = "abs";
         } else if (
@@ -184,6 +195,7 @@
             $state.board.style.startsWith("hex-even") ||
             $state.board.style.startsWith("hex-slanted") ||
             $state.board.style === "snubsquare" ||
+            $state.board.style === "onyx" ||
             $state.board.style.startsWith("cairo")
         ) {
             $state.board = {
@@ -192,6 +204,13 @@
                 height: 8,
                 blocked: canBlock ? $state.board.blocked : undefined,
             };
+            if ($state.board.style === "snubsquare") {
+                $state.board.snubStart = "S";
+            } else if ($state.board.style === "onyx") {
+                $state.board.snubStart = "T";
+            } else {
+                $state.board.snubStart = undefined;
+            }
         } else if ($state.board.style === "circular-cobweb") {
             $state.board = {
                 style: $state.board.style,
@@ -473,6 +492,18 @@
                     />
                     Start with vertical orientation
                 </label>
+            </div>
+        {/if}
+        {#if $state.board.style === "snubsquare" || $state.board.style === "onyx"}
+            <div class="control">
+                <button
+                    class="button apButton"
+                    on:click="{() => {
+                        $state.board.snubStart =
+                            $state.board.snubStart === 'S' ? 'T' : 'S';
+                        $state = $state;
+                    }}">Toggle top-left starting configuration</button
+                >
             </div>
         {/if}
         {#if canBlock}
