@@ -167,6 +167,7 @@
             whichWidth = undefined;
         }
         $state.pieces = null;
+        $state.board.rotate = 0;
         $state = $state;
     };
 
@@ -254,6 +255,7 @@
         }
         $state.pieces = null;
         $state.annotations = [];
+        $state.board.rotate = 0;
         $state = $state;
         initVars();
     };
@@ -511,8 +513,17 @@
                 >
             </div>
         {/if}
+        <div class="field padTop">
+            <label class="label" for="rotation">Board rotation</label>
+            <div class="control">
+                <input class="input" type="number" name="rotation" min="-360" max="360"  bind:value="{$state.board.rotate}" />
+            </div>
+            <div class="control">
+                <button class="button is-small apButton" on:click="{() => {$state.board.rotate = 0; $state = $state}}">Reset</button>
+            </div>
+        </div>
         {#if canBlock}
-            <div class="content">
+            <div class="content padTop">
                 <p>
                     This board type supports cell blocking. Click the board to
                     block a cell.
@@ -531,3 +542,9 @@
         <div bind:this="{previewDiv}" id="previewDiv"></div>
     </div>
 </div>
+
+<style>
+    .padTop {
+        padding-top: 1em;
+    }
+</style>
