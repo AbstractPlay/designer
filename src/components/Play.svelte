@@ -18,6 +18,7 @@
         MarkerFlood,
         Glyph,
     } from "@abstractplay/renderer/build/schemas/schema";
+    import { colourContext } from "@/stores/writeContext";
 
     onMount(() => {
         if (
@@ -100,11 +101,13 @@
     let previewDiv: HTMLDivElement;
     afterUpdate(() => {
         const opts: IRenderOptions = {
+            colourContext: $colourContext,
             divelem: previewDiv,
             boardClick,
         };
         try {
             previewDiv.innerHTML = null;
+            previewDiv.style.backgroundColor = $colourContext.background;
             APRender($state, opts);
         } catch (err) {
             previewDiv.innerHTML = `<p>Unable to render the piece with the current parameters.</p>`;

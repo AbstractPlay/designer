@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Added board rotation.
+-   Added support for board rotation and other renderer-wide options.
+-   Added colour contexts.
 
 ## [1.4.2] - 2024-09-18
 

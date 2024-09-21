@@ -7,6 +7,7 @@
         AnnotationBasic,
         RowCol,
     } from "@abstractplay/renderer/build/schemas/schema";
+    import { colourContext } from "@/stores/writeContext";
 
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
@@ -27,6 +28,7 @@
     let previewDiv: HTMLDivElement;
     afterUpdate(() => {
         const opts: IRenderOptions = {
+            colourContext: $colourContext,
             divelem: previewDiv,
             boardClick,
         };
@@ -36,6 +38,7 @@
         }
         try {
             previewDiv.innerHTML = null;
+            previewDiv.style.backgroundColor = $colourContext.background;
             APRender(renderstate, opts);
         } catch (err) {
             previewDiv.innerHTML = `<p>Unable to render the board with the current parameters.</p>`;

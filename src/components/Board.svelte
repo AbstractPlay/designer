@@ -4,9 +4,11 @@
         type RenderRepModified,
         type SupportedBoards,
     } from "@/stores/writeState";
+    import { colourContext, defaultContext } from "@/stores/writeContext";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
     import { onMount } from "svelte";
+    import ColorPicker from "svelte-awesome-color-picker";
 
     const boardTypes = new Map<SupportedBoards, string>([
         [
@@ -101,6 +103,26 @@
             "The bottom half of a hexhex board stretched so the left half of the top row overlaps with the right half",
         ],
     ]);
+    type ValidOption =
+        | "hide-labels"
+        | "hide-labels-half"
+        | "hide-star-points"
+        | "no-border"
+        | "reverse-letters"
+        | "reverse-numbers"
+        | "swap-labels";
+    const allOptions: [ValidOption, string | null][] = [
+        ["hide-labels", null],
+        ["hide-labels-half", "Hide half of the board labels"],
+        [
+            "hide-star-points",
+            "Hide the auto-generated star points on vertex boards",
+        ],
+        ["no-border", null],
+        ["reverse-letters", null],
+        ["reverse-numbers", null],
+        ["swap-labels", "Switch the usual row/column labels"],
+    ];
 
     let whichWidth: "abs" | "minmax" | undefined;
     let canBlock = false;
@@ -109,6 +131,7 @@
     let invertOrientation = false;
     let canInvertOrientation = false;
     let startDiamonds = false;
+    let selectedOptions: ValidOption[] = [];
     const initVars = () => {
         canBlock = false;
         canAlternate = false;
@@ -168,8 +191,14 @@
         }
         $state.pieces = null;
         $state.board.rotate = 0;
+        $state.options = selectedOptions;
         $state = $state;
     };
+
+    $: if (selectedOptions !== undefined) {
+        $state.options = selectedOptions;
+        $state = $state;
+    }
 
     const handleInvertClick = () => {
         if ($state.board.style === "cairo-collinear") {
@@ -256,6 +285,7 @@
         $state.pieces = null;
         $state.annotations = [];
         $state.board.rotate = 0;
+        $state.options = selectedOptions;
         $state = $state;
         initVars();
     };
@@ -318,19 +348,23 @@
 
     let previewDiv: HTMLDivElement;
     onMount(() => {
-        state.subscribe((state) => {
+        const updatePreview = (state: RenderRepModified) => {
             if (previewDiv !== undefined && previewDiv !== null) {
                 const toRender = JSON.parse(
                     JSON.stringify(state)
                 ) as RenderRepModified;
                 toRender.pieces = null;
                 const opts: IRenderOptions = {
+                    colourContext: $colourContext,
                     divelem: previewDiv,
                     width: "100%",
                     boardClick: canBlock ? handleBoardClick : undefined,
                 };
+                console.log(opts);
                 try {
                     previewDiv.innerHTML = null;
+                    previewDiv.style.backgroundColor =
+                        $colourContext.background;
                     APRender(toRender, opts);
                 } catch (err) {
                     console.log(JSON.stringify(toRender));
@@ -338,7 +372,9 @@
                     previewDiv.innerHTML = `<p>Unable to render the board with the current parameters.</p>`;
                 }
             }
-        });
+        };
+        state.subscribe((state) => updatePreview(state));
+        colourContext.subscribe(() => updatePreview($state));
         if ("isInit" in $state) {
             delete $state.isInit;
             handleStyleChange();
@@ -516,10 +552,23 @@
         <div class="field padTop">
             <label class="label" for="rotation">Board rotation</label>
             <div class="control">
-                <input class="input" type="number" name="rotation" min="-360" max="360"  bind:value="{$state.board.rotate}" />
+                <input
+                    class="input"
+                    type="number"
+                    name="rotation"
+                    min="-360"
+                    max="360"
+                    bind:value="{$state.board.rotate}"
+                />
             </div>
             <div class="control">
-                <button class="button is-small apButton" on:click="{() => {$state.board.rotate = 0; $state = $state}}">Reset</button>
+                <button
+                    class="button is-small apButton"
+                    on:click="{() => {
+                        $state.board.rotate = 0;
+                        $state = $state;
+                    }}">Reset</button
+                >
             </div>
         </div>
         {#if canBlock}
@@ -537,6 +586,102 @@
                 }}">Clear blocks</button
             >
         {/if}
+        <hr />
+        <div class="content">
+            <p>
+                The renderer supports a number of other options that might be
+                helpful when creating board diagrams. Most of the time, you
+                won't need to touch anything in this section, but you can if you
+                like. Not all options will affect all board styles.
+            </p>
+        </div>
+        <div class="field">
+            <label class="label">Toggle options</label>
+            {#each allOptions as [opt, desc]}
+                <div class="control">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            value="{opt}"
+                            bind:group="{selectedOptions}"
+                        />
+                        {opt}
+                    </label>
+                    {#if desc !== null}
+                        <div class="help">{desc}</div>
+                    {/if}
+                </div>
+            {/each}
+        </div>
+        <div class="field">
+            <label class="label">Colour context</label>
+            <div class="columns is-multiline">
+                <div class="column">
+                    <label class="label">Background</label>
+                    <div class="control">
+                        <ColorPicker
+                            bind:hex="{$colourContext.background}"
+                            on:input="{(event) =>
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    background: event.detail.hex,
+                                }))}"
+                            position="responsive"
+                        />
+                    </div>
+                </div>
+                <div class="column">
+                    <label class="label">Strokes</label>
+                    <div class="control">
+                        <ColorPicker
+                            bind:hex="{$colourContext.strokes}"
+                            on:input="{(event) =>
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    strokes: event.detail.hex,
+                                }))}"
+                            position="responsive"
+                        />
+                    </div>
+                </div>
+                <div class="column">
+                    <label class="label">Labels</label>
+                    <div class="control">
+                        <ColorPicker
+                            bind:hex="{$colourContext.labels}"
+                            on:input="{(event) =>
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    labels: event.detail.hex,
+                                }))}"
+                            position="responsive"
+                        />
+                    </div>
+                </div>
+                <div class="column">
+                    <label class="label">Fill</label>
+                    <div class="control">
+                        <ColorPicker
+                            bind:hex="{$colourContext.fill}"
+                            on:input="{(event) =>
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    fill: event.detail.hex,
+                                }))}"
+                            position="responsive"
+                        />
+                    </div>
+                    <div class="help">Used for checkered boards</div>
+                </div>
+            </div>
+            <div class="control">
+                <button
+                    class="button is-small apButton"
+                    on:click="{() => ($colourContext = defaultContext)}"
+                    >Reset</button
+                >
+            </div>
+        </div>
     </div>
     <div class="column">
         <div bind:this="{previewDiv}" id="previewDiv"></div>
