@@ -192,6 +192,7 @@
         $state.pieces = null;
         $state.board.rotate = 0;
         $state.options = selectedOptions;
+        $state.annotations = [];
         $state = $state;
     };
 
