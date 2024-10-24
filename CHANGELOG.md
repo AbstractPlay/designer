@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2024-10-24
+
+### Changed
+
+-   Height and width of all boards is restricted to 50 to avoid accidental crashes. You can still get larger boards by hand adjusting the JSON and importing it, but the input boxes won't allow it.
+
 ## [1.5.0] - 2024-09-21
 
 ### Added

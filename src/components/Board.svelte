@@ -293,6 +293,12 @@
 
     const updatePreview = () => {
         if (whichWidth === "minmax") {
+            if ($state.board.minWidth > 50) {
+                $state.board.minWidth = 50;
+            }
+            if ($state.board.maxWidth > 50) {
+                $state.board.maxWidth = 50;
+            }
             // if ($state.board.minWidth < 2) {
             //     $state.board.minWidth = 2;
             // }
@@ -303,6 +309,12 @@
                 $state.board.maxWidth = $state.board.minWidth * 2 - 1;
             }
         } else if (whichWidth === "abs") {
+            if ($state.board.width > 50) {
+                $state.board.width = 50;
+            }
+            if ($state.board.height > 50) {
+                $state.board.height = 50;
+            }
             if (symmetryLocked) {
                 $state.board.height = $state.board.width;
             }
@@ -423,6 +435,7 @@
                                 id="setWidth"
                                 type="number"
                                 min="1"
+                                max="50"
                                 bind:value="{$state.board.width}"
                                 on:input="{updatePreview}"
                             />
@@ -438,6 +451,7 @@
                                 id="setHeight"
                                 type="number"
                                 min="1"
+                                max="50"
                                 bind:value="{$state.board.height}"
                                 on:input="{updatePreview}"
                                 readonly="{symmetryLocked}"
@@ -468,6 +482,7 @@
                                 id="setMinWidth"
                                 type="number"
                                 min="1"
+                                max="50"
                                 bind:value="{$state.board.minWidth}"
                                 on:input="{updatePreview}"
                             />
@@ -484,6 +499,7 @@
                                 id="setMaxWidth"
                                 type="number"
                                 min="1"
+                                max="50"
                                 bind:value="{$state.board.maxWidth}"
                                 on:input="{updatePreview}"
                                 readonly="{symmetryLocked}"
