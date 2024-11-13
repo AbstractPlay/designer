@@ -9,6 +9,8 @@
     } from "@abstractplay/renderer/build/schemas/schema";
     import { colourContext } from "@/stores/writeContext";
 
+    type Shape = "square"|"circle"|"hexf"|"hexp";
+
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
         const idx = currentTargets.findIndex(
@@ -47,6 +49,7 @@
 
     let newNote = false;
     let currentType: "move" | "enter" | "eject" | "dots" | undefined;
+    let currentShape: Shape = "square";
     let currentTargets: [number, number][] = [];
     let currentNote: AnnotationBasic | undefined;
     let isDashed = false;
@@ -75,6 +78,11 @@
                 currentNote.style = "dashed";
             } else {
                 delete currentNote.style;
+            }
+            if (currentType === "enter" && currentShape !== "square") {
+                currentNote.shape = currentShape;
+            } else {
+                delete currentNote.shape;
             }
         } else {
             currentNote = undefined;
@@ -221,6 +229,18 @@
                                 Dashed line
                             </label>
                         </div>
+                    </div>
+                {/if}
+                {#if currentType === "enter"}
+                    <div class="field">
+                        <div class="select">
+                            <select bind:value="{currentShape}">
+                              <option value="square">Square</option>
+                              <option value="circle">Circle</option>
+                              <option value="hexf">Hex, flat</option>
+                              <option value="hexp">Hex, pointy</option>
+                            </select>
+                          </div>
                     </div>
                 {/if}
                 <div class="field">

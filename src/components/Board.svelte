@@ -77,6 +77,7 @@
             "hex-of-cir",
             "A hexagonally shaped board consisting of circular cells, pieces placed in the cells",
         ],
+        ["circular-wheel", "A circular wheel & spoke board"],
         ["circular-cobweb", "A circular cobweb board"],
         [
             "conhex-cells",
@@ -172,7 +173,7 @@
             }
             whichWidth = "abs";
         } else if (
-            $state.board.style === "circular-cobweb" ||
+            $state.board.style.startsWith("circular-") ||
             $state.board.style.startsWith("conical-hex")
         ) {
             whichWidth = "abs";
@@ -247,12 +248,13 @@
             } else {
                 $state.board.snubStart = undefined;
             }
-        } else if ($state.board.style === "circular-cobweb") {
+        } else if ($state.board.style.startsWith("circular-")) {
             $state.board = {
                 style: $state.board.style,
                 width: 8,
                 height: 4,
             };
+            symmetryLocked = false;
         } else if ($state.board.style.startsWith("hex-of")) {
             $state.board = {
                 style: $state.board.style,
