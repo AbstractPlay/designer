@@ -13,7 +13,7 @@ export type SupportedBoards = Exclude<
     "squares-stacked" | "pegboard" | "sowing" | "conhex-dots"
 >;
 export type BasicBoardModifed = BoardBasic & {
-    style: SupportedBoards;
+    style: SupportedBoards | "modular-hex";
 };
 export type RenderRepModified = APRenderRep & {
     board: BasicBoardModifed;
