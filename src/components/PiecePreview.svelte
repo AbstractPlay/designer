@@ -3,7 +3,7 @@
     import type { IRenderOptions } from "@abstractplay/renderer";
     import { onMount } from "svelte";
     import { customAlphabet } from "nanoid";
-    import type { RenderRepModified } from "@/stores/writeState";
+    import type { RenderRepModified } from "#/stores/writeState";
     const nanoid = customAlphabet(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
         5

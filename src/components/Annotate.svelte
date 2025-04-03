@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { state, type RenderRepModified } from "@/stores/writeState";
+    import { state, type RenderRepModified } from "#/stores/writeState";
+    import { capQ } from "#/stores/writeCaptureQueue";
+    import { toast } from "@zerodevx/svelte-toast";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
     import { afterUpdate, onMount } from "svelte";
@@ -7,9 +9,10 @@
         AnnotationBasic,
         RowCol,
     } from "@abstractplay/renderer/build/schemas/schema";
-    import { colourContext } from "@/stores/writeContext";
+    import { colourContext } from "#/stores/writeContext";
+    import html2canvas from "html2canvas";
 
-    type Shape = "square"|"circle"|"hexf"|"hexp";
+    type Shape = "square" | "circle" | "hexf" | "hexp";
 
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
@@ -235,12 +238,12 @@
                     <div class="field">
                         <div class="select">
                             <select bind:value="{currentShape}">
-                              <option value="square">Square</option>
-                              <option value="circle">Circle</option>
-                              <option value="hexf">Hex, flat</option>
-                              <option value="hexp">Hex, pointy</option>
+                                <option value="square">Square</option>
+                                <option value="circle">Circle</option>
+                                <option value="hexf">Hex, flat</option>
+                                <option value="hexp">Hex, pointy</option>
                             </select>
-                          </div>
+                        </div>
                     </div>
                 {/if}
                 <div class="field">
@@ -296,6 +299,43 @@
         </div>
     </div>
     <div class="column">
+        <div class="level">
+            <div class="level-left"></div>
+            <div class="level-right">
+                <div class="level-item">
+                    <div class="control">
+                        <button
+                            class="button apButton is-small"
+                            on:click="{() => {
+                                const prev = previewDiv.style.boxShadow;
+                                previewDiv.style.boxShadow = 'none';
+                                html2canvas(previewDiv, {
+                                    background: $colourContext.background,
+                                    width: previewDiv.clientWidth,
+                                    height: previewDiv.clientHeight,
+                                }).then(function (canvas) {
+                                    capQ.update((val) => [
+                                        ...val,
+                                        canvas.toDataURL(),
+                                    ]);
+                                    toast.push(
+                                        `Frame captured (${$capQ.length} total)`
+                                    );
+                                    previewDiv.style.boxShadow = prev;
+                                });
+                            }}"
+                            ><span class="icon"
+                                ><i
+                                    class="fa fa-camera"
+                                    aria-hidden="true"
+                                    title="Add board to capture queue"
+                                ></i></span
+                            ></button
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
         <div bind:this="{previewDiv}" class="box"></div>
     </div>
 </div>

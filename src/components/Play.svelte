@@ -1,24 +1,27 @@
 <script lang="ts">
-    import { state, type RenderRepModified } from "@/stores/writeState";
-    import { stack } from "@/stores/writeStack";
-    import { peers } from "@/stores/writePeers";
-    import { haveToken } from "@/stores/writeToken";
+    import { state, type RenderRepModified } from "#/stores/writeState";
+    import { stack } from "#/stores/writeStack";
+    import { peers } from "#/stores/writePeers";
+    import { haveToken } from "#/stores/writeToken";
+    import { capQ } from "#/stores/writeCaptureQueue";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
+    import { toast } from "@zerodevx/svelte-toast";
     import { afterUpdate, onMount } from "svelte";
     import { customAlphabet } from "nanoid";
+    import html2canvas from "html2canvas";
     const nanoid = customAlphabet(
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
         5
     );
     import PiecePreview from "./PiecePreview.svelte";
-    import type { APDesignerClientMessages } from "@/schemas/messages";
+    import type { APDesignerClientMessages } from "#/schemas/messages";
     import Modal from "./Modal.svelte";
     import type {
         MarkerFlood,
         Glyph,
     } from "@abstractplay/renderer/build/schemas/schema";
-    import { colourContext } from "@/stores/writeContext";
+    import { colourContext } from "#/stores/writeContext";
 
     onMount(() => {
         if (
@@ -262,7 +265,37 @@
                         }
                     }}"
                     ><span class="icon"
-                        ><i class="fa fa-undo" aria-hidden="true"></i></span
+                        ><i class="fa fa-undo" aria-hidden="true" title="Undo"
+                        ></i></span
+                    ></button
+                >
+            </div>
+        </div>
+        <div class="level-item">
+            <div class="control">
+                <button
+                    class="button apButton is-small"
+                    on:click="{() => {
+                        const prev = previewDiv.style.boxShadow;
+                        previewDiv.style.boxShadow = 'none';
+                        html2canvas(previewDiv, {
+                            background: $colourContext.background,
+                            width: previewDiv.clientWidth,
+                            height: previewDiv.clientHeight,
+                        }).then(function (canvas) {
+                            capQ.update((val) => [...val, canvas.toDataURL()]);
+                            toast.push(
+                                `Frame captured (${$capQ.length} total)`
+                            );
+                            previewDiv.style.boxShadow = prev;
+                        });
+                    }}"
+                    ><span class="icon"
+                        ><i
+                            class="fa fa-camera"
+                            aria-hidden="true"
+                            title="Add board to capture queue"
+                        ></i></span
                     ></button
                 >
             </div>
@@ -358,7 +391,7 @@
         {/if}
     </div>
     <div class="column">
-        <div bind:this="{previewDiv}" class="box"></div>
+        <div bind:this="{previewDiv}" class="box" id="captureSource"></div>
     </div>
 </div>
 

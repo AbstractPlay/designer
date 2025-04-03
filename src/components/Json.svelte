@@ -1,7 +1,9 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
-    import { state } from "@/stores/writeState";
+    import { state } from "#/stores/writeState";
+    import { savedBoards } from "#/stores/writeSavedBoards";
     import Modal from "./Modal.svelte";
+    import SaveLoad from "./SaveLoad.svelte";
 
     let copied = false;
     const copyToClipboard = async () => {
@@ -15,6 +17,10 @@
 
     let showModal = false;
     let savedJson: string;
+
+    const handleLoad = (val: string) => {
+        state.update(() => JSON.parse(val));
+    };
 </script>
 
 <div class="level">
@@ -41,7 +47,8 @@
                 <button
                     class="button apButtonAlert"
                     on:click="{() => {
-                        localStorage.clear();
+                        localStorage.removeItem('stack');
+                        localStorage.removeItem('state');
                         location.reload();
                     }}"
                 >
@@ -49,6 +56,13 @@
                 </button>
             </div>
         </div>
+    </div>
+    <div class="level-right">
+        <SaveLoad
+            store="{savedBoards}"
+            value="{JSON.stringify($state)}"
+            handleLoad="{handleLoad}"
+        />
     </div>
 </div>
 

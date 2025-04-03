@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { myName } from "@/stores/writeMyName";
-    import { peer } from "@/stores/writePeerObj";
-    import { peers } from "@/stores/writePeers";
-    import type { PeerRecord } from "@/stores/writePeers";
+    import { myName } from "#/stores/writeMyName";
+    import { peer } from "#/stores/writePeerObj";
+    import { peers } from "#/stores/writePeers";
+    import type { PeerRecord } from "#/stores/writePeers";
     import type { DataConnection } from "peerjs";
-    import type { APDesignerClientMessages } from "@/schemas/messages";
-    import { state, type RenderRepModified } from "@/stores/writeState";
-    import { haveToken } from "@/stores/writeToken";
+    import type { APDesignerClientMessages } from "#/schemas/messages";
+    import { state, type RenderRepModified } from "#/stores/writeState";
+    import { haveToken } from "#/stores/writeToken";
     import { onMount } from "svelte";
 
     let remotePeer: string;

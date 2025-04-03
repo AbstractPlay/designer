@@ -1,6 +1,8 @@
 import { writable } from "svelte/store";
 import type { RenderRepModified } from "./writeState";
-import deepclone from "rfdc/default";
+// const deepclone = require("rfdc/default");
+// import deepclone from "rfdc/default";
+import deepclone from "nanoclone";
 
 let initialState: RenderRepModified[] = [];
 if (localStorage.getItem("stack") !== null) {

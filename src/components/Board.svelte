@@ -3,13 +3,14 @@
         state,
         type RenderRepModified,
         type SupportedBoards,
-    } from "@/stores/writeState";
-    import { colourContext, defaultContext } from "@/stores/writeContext";
+    } from "#/stores/writeState";
+    import { colourContext, defaultContext } from "#/stores/writeContext";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
+    import type { BoardBasic } from "@abstractplay/renderer/build/schemas/schema";
     import { onMount } from "svelte";
     import ColorPicker from "svelte-awesome-color-picker";
-    import { generateField as genField } from "@/lib/modular";
+    import { generateField as genField } from "#/lib/modular";
 
     const boardTypes = new Map<SupportedBoards, string>([
         [
@@ -135,7 +136,7 @@
     let canInvertOrientation = false;
     let startDiamonds = false;
     let selectedOptions: ValidOption[] = [];
-    let selectedHalf: "full"|"top"|"bottom" = "full";
+    let selectedHalf: "full" | "top" | "bottom" = "full";
     let numModules = 7;
     const initVars = () => {
         canBlock = false;
@@ -379,9 +380,11 @@
     };
 
     const generateField = () => {
-        $state.board = genField(numModules) as (BoardBasic & { style: SupportedBoards | "modular-hex"; });
+        $state.board = genField(numModules) as BoardBasic & {
+            style: SupportedBoards | "modular-hex";
+        };
         $state = $state;
-    }
+    };
 
     let previewDiv: HTMLDivElement;
     onMount(() => {
@@ -567,20 +570,35 @@
             </div>
         {/if}
         {#if canHalf}
-        <div class="control">
-            <label class="radio">
-                <input type="radio" name="half" value="full" bind:group="{selectedHalf}" />
-                Full
-            </label>
-            <label class="radio">
-              <input type="radio" name="half" value="top" bind:group="{selectedHalf}" />
-              Top half
-            </label>
-            <label class="radio">
-              <input type="radio" name="half" value="bottom" bind:group="{selectedHalf}" />
-              Bottom half
-            </label>
-          </div>
+            <div class="control">
+                <label class="radio">
+                    <input
+                        type="radio"
+                        name="half"
+                        value="full"
+                        bind:group="{selectedHalf}"
+                    />
+                    Full
+                </label>
+                <label class="radio">
+                    <input
+                        type="radio"
+                        name="half"
+                        value="top"
+                        bind:group="{selectedHalf}"
+                    />
+                    Top half
+                </label>
+                <label class="radio">
+                    <input
+                        type="radio"
+                        name="half"
+                        value="bottom"
+                        bind:group="{selectedHalf}"
+                    />
+                    Bottom half
+                </label>
+            </div>
         {/if}
         {#if canInvertOrientation}
             <div class="control">
@@ -645,15 +663,29 @@
         {/if}
         <hr />
         <div class="content">
-            <p>You can generate a randomized hex field composed of modules (hexhex 2s) arranged to always touch another at two points. Select the number of modules and then the `Generate field` button.</p>
+            <p>
+                You can generate a randomized hex field composed of modules
+                (hexhex 2s) arranged to always touch another at two points.
+                Select the number of modules and then the `Generate field`
+                button.
+            </p>
         </div>
         <div class="field padTop">
             <label class="label" for="numModules">Number of modules</label>
             <div class="control">
-                <input class="input" name="numModules" type="number" min="1" max="30" bind:value="{numModules}" />
+                <input
+                    class="input"
+                    name="numModules"
+                    type="number"
+                    min="1"
+                    max="30"
+                    bind:value="{numModules}"
+                />
             </div>
             <div class="control">
-                <button class="button apButton" on:click="{generateField}">Generate field</button>
+                <button class="button apButton" on:click="{generateField}"
+                    >Generate field</button
+                >
             </div>
         </div>
         <hr />

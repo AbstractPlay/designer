@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { SvelteToast } from "@zerodevx/svelte-toast";
     import logo from "./assets/AbstractPlayLogo.svg";
     import Intro from "./components/Intro.svelte";
     import Board from "./components/Board.svelte";
@@ -8,8 +9,18 @@
     import Status from "./components/Status.svelte";
     import PeerList from "./components/PeerList.svelte";
     import Annotate from "./components/Annotate.svelte";
+    import Animate from "./components/Animate.svelte";
 
-    type Tab = "intro" | "board" | "pieces" | "play" | "json" | "annotate";
+    const optionsToast = {};
+
+    type Tab =
+        | "intro"
+        | "board"
+        | "pieces"
+        | "play"
+        | "json"
+        | "annotate"
+        | "animate";
     let activeTab: Tab = "intro";
     const handleClick = (e: MouseEvent | TouchEvent, key: Tab) => {
         e.preventDefault();
@@ -64,6 +75,9 @@
             <li class="{activeTab === 'annotate' ? 'is-active' : ''}">
                 <a on:click="{(e) => handleClick(e, 'annotate')}"> Annotate </a>
             </li>
+            <li class="{activeTab === 'animate' ? 'is-active' : ''}">
+                <a on:click="{(e) => handleClick(e, 'animate')}"> Animate </a>
+            </li>
             <li class="{activeTab === 'json' ? 'is-active' : ''}">
                 <a on:click="{(e) => handleClick(e, 'json')}"> JSON </a>
             </li>
@@ -82,9 +96,13 @@
             <Json />
         {:else if activeTab === "annotate"}
             <Annotate />
+        {:else if activeTab === "animate"}
+            <Animate />
         {/if}
     </div>
 </main>
+
+<SvelteToast options="{optionsToast}" />
 
 <style>
     .logo {

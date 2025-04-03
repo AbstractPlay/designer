@@ -14,12 +14,25 @@ export default defineConfig({
     define: {
         __APP_VERSION__: JSON.stringify(pkg.version),
     },
+    // base: process.env.NODE_ENV === "production" ? "/" : "/designer/",
     resolve: {
         alias: [
             {
-                find: "@",
+                find: "#",
                 replacement: path.resolve("./src"),
             },
         ],
     },
+    // server: {
+    //     headers: {
+    //         "Content-Security-Policy":
+    //             "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'",
+    //     },
+    // },
+    // build: {
+    //     commonjsOptions: {
+    //         // include: ["@abstractplay/renderer", "@abstractplay/renderer/build/schemas/schema", "@abstractplay/renderer/build/renderers/_base", "@abstractplay/renderer/build"],
+    //         include: [],
+    //     },
+    // }
 });

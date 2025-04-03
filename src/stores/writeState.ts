@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import type { APRenderRep } from "@abstractplay/renderer";
 import { stack } from "./writeStack";
-import deepclone from "rfdc/default";
+import deepclone from "nanoclone";
 import type {
     AnnotationBasic,
     BoardBasic,

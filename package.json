@@ -1,12 +1,13 @@
 {
     "name": "abstractplay-designer",
     "private": true,
-    "version": "1.6.1",
+    "version": "1.7.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview",
+        "dev": "set NODE_ENV=development && vite",
+        "build-dev": "set NODE_ENV=development && vite build",
+        "build": "set NODE_ENV=production && vite build",
+        "preview": "set NODE_ENV=development && vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "deploy": "npx serverless client deploy --no-confirm && aws cloudfront create-invalidation --profile AbstractPlayDev --distribution-id EX4SLWV2O8U6O --paths /*",
         "format": "prettier --write --plugin prettier-plugin-svelte .",
@@ -22,6 +23,7 @@
         "prettier": "^3.0.2",
         "prettier-plugin-svelte": "^3.0.3",
         "serverless-finch": "^4.0.3",
+        "shx": "^0.4.0",
         "svelte": "^4.0.5",
         "svelte-check": "^3.4.6",
         "tslib": "^2.6.0",
@@ -29,11 +31,15 @@
         "vite": "^4.4.5"
     },
     "dependencies": {
-        "@abstractplay/renderer": "^1.0.0-ci-12737305773.0",
+        "@abstractplay/renderer": "^1.0.0-ci-14180700580.0",
+        "@types/html2canvas": "^0.5.35",
+        "@zerodevx/svelte-toast": "^0.9.6",
+        "gif.js.optimized": "^1.0.1",
         "honeycomb-grid": "^4.1.5",
+        "html2canvas": "^1.4.1",
+        "nanoclone": "^1.0.2",
         "nanoid": "^4.0.2",
         "peerjs": "^1.4.7",
-        "rfdc": "^1.3.0",
         "svelte-awesome-color-picker": "^3.1.4"
     }
 }
