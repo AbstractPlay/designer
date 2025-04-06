@@ -4,7 +4,22 @@
     import { toast } from "@zerodevx/svelte-toast";
     import GIF from "gif.js.optimized";
     import SaveLoad from "./SaveLoad.svelte";
+    import Modal from "./Modal.svelte";
 
+    let renderStart = 0;
+    let elapsed = 0;
+    let interval: undefined|NodeJS.Timeout;
+    const startInterval = () => {
+        if (interval !== undefined) {
+            clearInterval(interval)
+        }
+        interval = setInterval(()=> {
+            elapsed = Date.now() - renderStart;
+        }, 100)
+	}
+
+    let isRendering = false;
+    let renderProgress = 0;
     let frameDelay = 1000;
     let repeat = 0;
     let currFrame = 0;
@@ -79,6 +94,7 @@
                     imgEle.src = $capQ[0];
                     width = imgEle.width;
                     height = imgEle.height;
+                    imgEle.remove();
                 }
                 let gif = new GIF({
                     workers: 4,
@@ -88,12 +104,23 @@
                     height,
                     repeat: repeat < 0 ? -1 : repeat,
                 });
+                gif.on("start", () => {
+                    renderProgress = 0;
+                    renderStart = Date.now();
+                    startInterval();
+                    isRendering = true;
+                });
+                gif.on("progress", (p) => {
+                    renderProgress = p * 100;
+                });
                 gif.on("finished", function (blob) {
                     const url = URL.createObjectURL(blob);
                     const img = document.createElement("img");
                     img.src = url;
                     renderedDiv.innerHTML = "";
                     renderedDiv.appendChild(img);
+                    isRendering = false;
+                    clearInterval(interval);
                     toast.push(
                         "Animated GIF generated. It should be visible at the bottom of the page. If there are dropped (blacked out) frames, just click the button again."
                     );
@@ -105,6 +132,7 @@
                     const imgEle = document.createElement("img");
                     imgEle.src = url;
                     gif.addFrame(imgEle, { delay: frameDelay });
+                    imgEle.remove();
                 }
                 gif.render();
             });
@@ -312,7 +340,7 @@
     <div class="level-right">
         <div class="level-item">
             <div class="control">
-                <button class="button apButton" on:click="{renderGif}"
+                <button class="button apButton" on:click="{renderGif}" disabled={isRendering}
                     >Render GIF</button
                 >
             </div>
@@ -320,3 +348,15 @@
     </div>
 </div>
 <div class="box" bind:this="{renderedDiv}"></div>
+<Modal
+    title="GIF Rendering"
+    show={isRendering}
+    buttons="{[]}"
+>
+    <div class="content">
+        Time elapsed: {elapsed} ms
+    </div>
+    <div>
+        <progress class="progress" value="{renderProgress}" max="100">{renderProgress}%</progress>
+    </div>
+</Modal>

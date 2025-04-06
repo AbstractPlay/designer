@@ -30,11 +30,14 @@
         <div class="modal-card">
             <header class="modal-card-head">
                 <p class="modal-card-title">{title}</p>
+                {#if buttons.length > 0}
                 <button class="delete" aria-label="close"></button>
+                {/if}
             </header>
             <section class="modal-card-body">
                 <slot />
             </section>
+            {#if buttons.length > 0}
             <footer class="modal-card-foot">
                 {#each realButtons as btn}
                     <button
@@ -55,6 +58,7 @@
                     {closeBtn.label}
                 </button>
             </footer>
+            {/if}
         </div>
     </div>
 {/if}
