@@ -212,6 +212,7 @@
                             ]);
                             currFrame--;
                         }
+                        toast.push("Frame moved left")
                     }}"
                     ><span class="icon"
                         ><i
@@ -235,6 +236,7 @@
                         if (currFrame > 0) {
                             currFrame--;
                         }
+                        toast.push("Frame deleted");
                     }}"
                     ><span class="icon"
                         ><i
@@ -266,6 +268,7 @@
                             ]);
                             currFrame++;
                         }
+                        toast.push("Frame moved right")
                     }}"
                     ><span class="icon"
                         ><i
@@ -285,6 +288,7 @@
                     class="button apButton is-small"
                     on:click="{() => {
                         capQ.update((val) => []);
+                        toast.push("Queue cleared");
                     }}">Clear queue</button
                 >
             </div>
