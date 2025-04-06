@@ -31,33 +31,33 @@
             <header class="modal-card-head">
                 <p class="modal-card-title">{title}</p>
                 {#if buttons.length > 0}
-                <button class="delete" aria-label="close"></button>
+                    <button class="delete" aria-label="close"></button>
                 {/if}
             </header>
             <section class="modal-card-body">
                 <slot />
             </section>
             {#if buttons.length > 0}
-            <footer class="modal-card-foot">
-                {#each realButtons as btn}
+                <footer class="modal-card-foot">
+                    {#each realButtons as btn}
+                        <button
+                            class="button {btn.style !== undefined
+                                ? btn.style
+                                : ''}"
+                            on:click="{btn.callback}"
+                        >
+                            {btn.label}
+                        </button>
+                    {/each}
                     <button
-                        class="button {btn.style !== undefined
-                            ? btn.style
+                        class="button {closeBtn.style !== undefined
+                            ? closeBtn.style
                             : ''}"
-                        on:click="{btn.callback}"
+                        on:click="{closeBtn.callback}"
                     >
-                        {btn.label}
+                        {closeBtn.label}
                     </button>
-                {/each}
-                <button
-                    class="button {closeBtn.style !== undefined
-                        ? closeBtn.style
-                        : ''}"
-                    on:click="{closeBtn.callback}"
-                >
-                    {closeBtn.label}
-                </button>
-            </footer>
+                </footer>
             {/if}
         </div>
     </div>

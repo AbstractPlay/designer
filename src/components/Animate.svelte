@@ -8,15 +8,15 @@
 
     let renderStart = 0;
     let elapsed = 0;
-    let interval: undefined|NodeJS.Timeout;
+    let interval: undefined | NodeJS.Timeout;
     const startInterval = () => {
         if (interval !== undefined) {
-            clearInterval(interval)
+            clearInterval(interval);
         }
-        interval = setInterval(()=> {
+        interval = setInterval(() => {
             elapsed = Date.now() - renderStart;
-        }, 100)
-	}
+        }, 100);
+    };
 
     let isRendering = false;
     let renderProgress = 0;
@@ -212,7 +212,7 @@
                             ]);
                             currFrame--;
                         }
-                        toast.push("Frame moved left")
+                        toast.push('Frame moved left');
                     }}"
                     ><span class="icon"
                         ><i
@@ -236,7 +236,7 @@
                         if (currFrame > 0) {
                             currFrame--;
                         }
-                        toast.push("Frame deleted");
+                        toast.push('Frame deleted');
                     }}"
                     ><span class="icon"
                         ><i
@@ -268,7 +268,7 @@
                             ]);
                             currFrame++;
                         }
-                        toast.push("Frame moved right")
+                        toast.push('Frame moved right');
                     }}"
                     ><span class="icon"
                         ><i
@@ -288,7 +288,7 @@
                     class="button apButton is-small"
                     on:click="{() => {
                         capQ.update((val) => []);
-                        toast.push("Queue cleared");
+                        toast.push('Queue cleared');
                     }}">Clear queue</button
                 >
             </div>
@@ -344,23 +344,23 @@
     <div class="level-right">
         <div class="level-item">
             <div class="control">
-                <button class="button apButton" on:click="{renderGif}" disabled={isRendering}
-                    >Render GIF</button
+                <button
+                    class="button apButton"
+                    on:click="{renderGif}"
+                    disabled="{isRendering}">Render GIF</button
                 >
             </div>
         </div>
     </div>
 </div>
 <div class="box" bind:this="{renderedDiv}"></div>
-<Modal
-    title="GIF Rendering"
-    show={isRendering}
-    buttons="{[]}"
->
+<Modal title="GIF Rendering" show="{isRendering}" buttons="{[]}">
     <div class="content">
         Time elapsed: {elapsed} ms
     </div>
     <div>
-        <progress class="progress" value="{renderProgress}" max="100">{renderProgress}%</progress>
+        <progress class="progress" value="{renderProgress}" max="100"
+            >{renderProgress}%</progress
+        >
     </div>
 </Modal>
