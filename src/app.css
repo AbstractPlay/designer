@@ -17,6 +17,10 @@
     --secondary-color-3-bg: #eefcff;
 }
 
+body {
+    padding-bottom: 10em;
+}
+
 h1,
 h2,
 h3,
