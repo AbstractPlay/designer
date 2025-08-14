@@ -51,6 +51,14 @@
             "A vertex grid with specific connections, originally for the game Fanorona",
         ],
         [
+            "pentagonal",
+            "A pentagonal board where the centre cell has only five connections"
+        ],
+        [
+            "pentagonal-bluestone",
+            "A pentagonal board where the outer nodes are modified slightly, developed specifically for the game Bluestone"
+        ],
+        [
             "hex-odd-f",
             "A rectangular grid of hexes with flat tops and the odd-numbered columns outdented",
         ],
@@ -148,6 +156,7 @@
         } else if (
             $state.board.style.startsWith("squares") ||
             $state.board.style.startsWith("vertex") ||
+            $state.board.style.startsWith("pentagonal") ||
             $state.board.style.startsWith("hex-odd") ||
             $state.board.style.startsWith("hex-even") ||
             $state.board.style.startsWith("hex-slanted") ||
@@ -159,6 +168,7 @@
             if (
                 $state.board.style.startsWith("squares") ||
                 $state.board.style.startsWith("vertex") ||
+                $state.board.style.startsWith("pentagonal") ||
                 $state.board.style.startsWith("hex-odd") ||
                 $state.board.style.startsWith("hex-even") ||
                 $state.board.style.startsWith("hex-slanted") ||
@@ -266,6 +276,13 @@
             } else {
                 $state.board.snubStart = undefined;
             }
+        } else if ($state.board.style.startsWith("pentagonal")) {
+            $state.board = {
+                style: $state.board.style,
+                width: 6,
+                height: 6,
+                blocked: canBlock ? $state.board.blocked : undefined,
+            };
         } else if ($state.board.style.startsWith("circular-")) {
             $state.board = {
                 style: $state.board.style,

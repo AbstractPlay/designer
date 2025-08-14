@@ -1,7 +1,7 @@
 {
     "name": "abstractplay-designer",
     "private": true,
-    "version": "1.7.1",
+    "version": "1.7.2",
     "type": "module",
     "scripts": {
         "dev": "set NODE_ENV=development && vite",
@@ -31,7 +31,7 @@
         "vite": "^4.4.5"
     },
     "dependencies": {
-        "@abstractplay/renderer": "^1.0.0-ci-14180700580.0",
+        "@abstractplay/renderer": "^1.0.0-ci-16977088517.0",
         "@types/html2canvas": "^0.5.35",
         "@zerodevx/svelte-toast": "^0.9.6",
         "gif.js.optimized": "^1.0.1",
