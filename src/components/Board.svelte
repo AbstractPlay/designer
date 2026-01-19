@@ -113,6 +113,10 @@
             "pyramid-hex",
             "The bottom half of a hexhex board stretched so the left half of the top row overlaps with the right half",
         ],
+        [
+            "sowing-round",
+            "A circular board intended for certain sowing games."
+        ],
     ]);
     type ValidOption =
         | "hide-labels"
@@ -191,7 +195,8 @@
             whichWidth = "abs";
         } else if (
             $state.board.style.startsWith("circular-") ||
-            $state.board.style.startsWith("conical-hex")
+            $state.board.style.startsWith("conical-hex") ||
+            $state.board.style === "sowing-round"
         ) {
             whichWidth = "abs";
         } else if (
@@ -288,6 +293,13 @@
                 style: $state.board.style,
                 width: 8,
                 height: 4,
+            };
+            symmetryLocked = false;
+        } else if ($state.board.style === "sowing-round") {
+            $state.board = {
+                style: $state.board.style,
+                width: 8,
+                height: 1,
             };
             symmetryLocked = false;
         } else if ($state.board.style.startsWith("hex-of")) {

@@ -31,7 +31,7 @@
         "vite": "^4.4.5"
     },
     "dependencies": {
-        "@abstractplay/renderer": "^1.0.0-ci-16977088517.0",
+        "@abstractplay/renderer": "^1.0.0-ci-21051058249.0",
         "@types/html2canvas": "^0.5.35",
         "@zerodevx/svelte-toast": "^0.9.6",
         "gif.js.optimized": "^1.0.1",
