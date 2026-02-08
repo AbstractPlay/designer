@@ -1,7 +1,7 @@
 {
     "name": "abstractplay-designer",
     "private": true,
-    "version": "1.7.2",
+    "version": "1.7.3",
     "type": "module",
     "scripts": {
         "dev": "set NODE_ENV=development && vite",

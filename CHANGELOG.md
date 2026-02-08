@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.3] - 2026-02-07
+
+### Added
+
+-   You can now flip the x and y coordinates of glyphs. Doesn't affect text overlays, and can cause weirdness when rotating boards.
+
 ## [1.7.2] - 2025-08-14
 
 ### Added
