@@ -126,6 +126,20 @@
         glyphObj = glyphObj;
     };
 
+    let flipx = false;
+    const handleFlipXChange = () => {
+        flipx = !flipx;
+        glyphObj.flipx = flipx;
+        glyphObj = glyphObj;
+    };
+
+    let flipy = false;
+    const handleFlipYChange = () => {
+        flipy = !flipy;
+        glyphObj.flipy = flipy;
+        glyphObj = glyphObj;
+    };
+
     const addToLegend = () => {
         const id = nanoid();
         if (
@@ -206,6 +220,24 @@
                         on:input="{handleOpacityChange}"
                     />
                 </div>
+            </div>
+            <div class="field">
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        bind:checked="{flipx}"
+                        on:input="{handleFlipXChange}"
+                    />
+                    Flip x coordinates
+                </label>
+                <label class="checkbox">
+                    <input
+                        type="checkbox"
+                        bind:checked="{flipy}"
+                        on:input="{handleFlipYChange}"
+                    />
+                    Flip y coordinates
+                </label>
             </div>
             <div class="field">
                 <label class="label" for="addOverlay">Overlay text</label>
