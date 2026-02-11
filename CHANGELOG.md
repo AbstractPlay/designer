@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.4] - 2026-02-11
+
+### Added
+
+-   Added two new board styles:
+    -   `rect-of-tri` is a rectangular board derived from `hex-of-tri`. The `no-border` option will omit the left and right vertical connections.
+    -   `hex-of-tri-f` is identical to `hex-of-tri` except you place on the spaces instead of the intersections. Labelling is adjusted to match.
+
 ## [1.7.3] - 2026-02-07
 
 ### Added

@@ -51,6 +51,10 @@
             "A vertex grid with specific connections, originally for the game Fanorona",
         ],
         [
+            "rect-of-tri",
+            "A rectangular board derived from hex-of-tri where pieces are placed on the vertices. The `no-border` option will omit the vertical lines on the left and right."
+        ],
+        [
             "pentagonal",
             "A pentagonal board where the centre cell has only five connections"
         ],
@@ -82,6 +86,10 @@
         [
             "hex-of-tri",
             "A hexagonally shaped board consisting of triangle-shaped cells, pieces placed on the vertices",
+        ],
+        [
+            "hex-of-tri-f",
+            "Same as `hex-of-tri` but you play on the spaces. Pieces automatically scale."
         ],
         [
             "hex-of-cir",
@@ -167,7 +175,8 @@
             $state.board.style.startsWith("snubsquare") ||
             $state.board.style === "onyx" ||
             $state.board.style === "conhex-cells" ||
-            $state.board.style.startsWith("cairo")
+            $state.board.style.startsWith("cairo") ||
+            $state.board.style === "rect-of-tri"
         ) {
             if (
                 $state.board.style.startsWith("squares") ||
@@ -177,7 +186,8 @@
                 $state.board.style.startsWith("hex-even") ||
                 $state.board.style.startsWith("hex-slanted") ||
                 $state.board.style.startsWith("cairo") ||
-                $state.board.style === "snubsquare-cells"
+                $state.board.style === "snubsquare-cells" ||
+                $state.board.style === "rect-of-tri"
             ) {
                 canBlock = true;
             } else {
@@ -191,6 +201,10 @@
             }
             if ($state.board.style === "onyx") {
                 $state.board.snubStart = "T";
+            }
+            if ($state.board.style === "rect-of-tri") {
+                $state.board.triStart = "W";
+                symmetryLocked = false;
             }
             whichWidth = "abs";
         } else if (
@@ -280,6 +294,18 @@
                 $state.board.snubStart = "T";
             } else {
                 $state.board.snubStart = undefined;
+            }
+        } else if ($state.board.style === "rect-of-tri") {
+            $state.board = {
+                style: $state.board.style,
+                width: 7,
+                height: 9,
+                blocked: canBlock ? $state.board.blocked : undefined,
+            };
+            if ($state.board.style === "rect-of-tri") {
+                $state.board.triStart = "W";
+            } else {
+                $state.board.triStart = undefined;
             }
         } else if ($state.board.style.startsWith("pentagonal")) {
             $state.board = {
@@ -650,6 +676,17 @@
                             $state.board.snubStart === 'S' ? 'T' : 'S';
                         $state = $state;
                     }}">Toggle top-left starting configuration</button
+                >
+            </div>
+        {:else if $state.board.style === "rect-of-tri"}
+            <div class="control">
+                <button
+                    class="button apButton"
+                    on:click="{() => {
+                        $state.board.triStart =
+                            $state.board.triStart === 'W' ? 'N' : 'W';
+                        $state = $state;
+                    }}">Toggle first-row starting configuration</button
                 >
             </div>
         {/if}
