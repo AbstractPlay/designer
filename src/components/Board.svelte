@@ -12,6 +12,19 @@
     import ColorPicker from "svelte-awesome-color-picker";
     import { generateField as genField } from "#/lib/modular";
 
+    const handleBackgroundChange = (event: CustomEvent<{ hex: string }>) => {
+        if (event.detail.hex === undefined) {
+            return;
+        }
+        colourContext.update((v) => {
+            const newContext = { ...v, background: event.detail.hex };
+            if (v.background === v.board) {
+                newContext.board = event.detail.hex;
+            }
+            return newContext;
+        });
+    };
+
     const boardTypes = new Map<SupportedBoards, string>([
         [
             "squares",
@@ -443,6 +456,7 @@
 
     let previewDiv: HTMLDivElement;
     onMount(() => {
+        colourContext.update((v) => ({ ...v, board: v.board ?? v.background }));
         const updatePreview = (state: RenderRepModified) => {
             if (previewDiv !== undefined && previewDiv !== null) {
                 const toRender = JSON.parse(
@@ -789,25 +803,32 @@
                     <div class="control">
                         <ColorPicker
                             bind:hex="{$colourContext.background}"
-                            on:input="{(event) =>
-                                colourContext.update((v) => ({
-                                    ...v,
-                                    background: event.detail.hex,
-                                }))}"
+                            on:change="{handleBackgroundChange}"
                             position="responsive"
                         />
                     </div>
+                </div>
+                <div class="column">
+                    <label class="label">Board</label>
+                    <div class="control">
+                        <ColorPicker
+                            bind:hex="{$colourContext.board}"
+                            on:change="{(e) =>
+                                e.detail.hex &&
+                                colourContext.update((v) => ({ ...v, board: e.detail.hex }))}"
+                            position="responsive"
+                        />
+                    </div>
+                    <div class="help">Used for board fills</div>
                 </div>
                 <div class="column">
                     <label class="label">Strokes</label>
                     <div class="control">
                         <ColorPicker
                             bind:hex="{$colourContext.strokes}"
-                            on:input="{(event) =>
-                                colourContext.update((v) => ({
-                                    ...v,
-                                    strokes: event.detail.hex,
-                                }))}"
+                            on:change="{(e) =>
+                                e.detail.hex &&
+                                colourContext.update((v) => ({ ...v, strokes: e.detail.hex }))}"
                             position="responsive"
                         />
                     </div>
@@ -817,11 +838,9 @@
                     <div class="control">
                         <ColorPicker
                             bind:hex="{$colourContext.labels}"
-                            on:input="{(event) =>
-                                colourContext.update((v) => ({
-                                    ...v,
-                                    labels: event.detail.hex,
-                                }))}"
+                            on:change="{(e) =>
+                                e.detail.hex &&
+                                colourContext.update((v) => ({ ...v, labels: e.detail.hex }))}"
                             position="responsive"
                         />
                     </div>
@@ -831,11 +850,9 @@
                     <div class="control">
                         <ColorPicker
                             bind:hex="{$colourContext.fill}"
-                            on:input="{(event) =>
-                                colourContext.update((v) => ({
-                                    ...v,
-                                    fill: event.detail.hex,
-                                }))}"
+                            on:change="{(e) =>
+                                e.detail.hex &&
+                                colourContext.update((v) => ({ ...v, fill: e.detail.hex }))}"
                             position="responsive"
                         />
                     </div>

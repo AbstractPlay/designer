@@ -8,6 +8,7 @@ export const defaultContext: IColourContext = {
     labels: "#000",
     annotations: "#000",
     fill: "#000",
+    board: "#fff",
 };
 
 let initialState: IColourContext = {
@@ -17,6 +18,7 @@ let initialState: IColourContext = {
     labels: "#000",
     annotations: "#000",
     fill: "#000",
+    board: "#fff",
 };
 
 if (localStorage.getItem("context") !== null) {
