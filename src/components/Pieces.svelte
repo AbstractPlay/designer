@@ -1,7 +1,6 @@
 <script lang="ts">
     import { state, type RenderRepModified } from "#/stores/writeState";
-    import { sheets } from "@abstractplay/renderer/src/sheets";
-    import type { Glyph } from "@abstractplay/renderer";
+    import { sheets, type Glyph } from "@abstractplay/renderer";
     import { onMount } from "svelte";
     import { customAlphabet } from "nanoid";
     const nanoid = customAlphabet(
