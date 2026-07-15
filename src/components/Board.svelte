@@ -5,6 +5,7 @@
         type SupportedBoards,
     } from "#/stores/writeState";
     import { colourContext, defaultContext } from "#/stores/writeContext";
+    import { rendererOptions } from "#/stores/writeRendererOptions";
     import { render as APRender } from "@abstractplay/renderer";
     import type { IRenderOptions } from "@abstractplay/renderer";
     import type { BoardBasic } from "@abstractplay/renderer/build/schemas/schema";
@@ -139,14 +140,7 @@
             "A circular board intended for certain sowing games."
         ],
     ]);
-    type ValidOption =
-        | "hide-labels"
-        | "hide-labels-half"
-        | "hide-star-points"
-        | "no-border"
-        | "reverse-letters"
-        | "reverse-numbers"
-        | "swap-labels";
+    import type { ValidOption } from "#/stores/writeRendererOptions";
     const allOptions: [ValidOption, string | null][] = [
         ["hide-labels", null],
         ["hide-labels-half", "Hide half of the board labels"],
@@ -168,7 +162,6 @@
     let invertOrientation = false;
     let canInvertOrientation = false;
     let startDiamonds = false;
-    let selectedOptions: ValidOption[] = [];
     let selectedHalf: "full" | "top" | "bottom" = "full";
     let numModules = 7;
     const initVars = () => {
@@ -242,13 +235,13 @@
         }
         $state.pieces = null;
         $state.board.rotate = 0;
-        $state.options = selectedOptions;
+        $state.options = $rendererOptions;
         $state.annotations = [];
         $state = $state;
     };
 
-    $: if (selectedOptions !== undefined) {
-        $state.options = selectedOptions;
+    $: if ($rendererOptions !== undefined) {
+        $state.options = $rendererOptions;
         $state = $state;
     }
 
@@ -374,7 +367,7 @@
         $state.pieces = null;
         $state.annotations = [];
         $state.board.rotate = 0;
-        $state.options = selectedOptions;
+        $state.options = $rendererOptions;
         $state = $state;
         initVars();
     };
@@ -785,7 +778,7 @@
                         <input
                             type="checkbox"
                             value="{opt}"
-                            bind:group="{selectedOptions}"
+                            bind:group="{$rendererOptions}"
                         />
                         {opt}
                     </label>
