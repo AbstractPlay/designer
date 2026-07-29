@@ -18,3 +18,13 @@ custom:
         bucketName: designer.abstractplay.com
         distributionFolder: ./dist
         indexDocument: index.html
+        objectHeaders:
+            "assets/**":
+                - name: Cache-Control
+                  value: "public, max-age=31536000, immutable"
+            "index.html":
+                - name: Cache-Control
+                  value: "no-cache, no-store, must-revalidate"
+            ALL_OBJECTS:
+                - name: Cache-Control
+                  value: "public, max-age=3600"
