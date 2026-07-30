@@ -10,9 +10,15 @@ on:
         types: [dep_update_prod]
     workflow_dispatch:
 
+concurrency:
+    group: deploy-prod
+    cancel-in-progress: true
+
 jobs:
     build-prod:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
 
         # strategy:
         #   matrix:
@@ -47,8 +53,19 @@ jobs:
             - name: Install deps
               run: echo "@abstractplay:registry=https://npm.pkg.github.com/" >> .npmrc
             - run: echo "//npm.pkg.github.com/:_authToken=${{secrets.PAT_READ_PACKAGES}}" >> .npmrc
-            - run: npm i
-            - run: npm i @abstractplay/renderer
-            - run: npm list @abstractplay/renderer
+            - run: npm ci
+            - name: Install pinned AP dependencies
+              env:
+                AP_RENDERER_VERSION: ${{ github.event.client_payload.renderer_version }}
+                AP_SOURCE: ${{ github.event.client_payload.renderer_version && format('renderer-ci-{0}', github.event.client_payload.renderer_version) || '' }}
+              run: node bin/install-ap-deps.mjs --stage prod --renderer-only
+            - name: Sync dependency manifests
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: "deps: sync AP versions [skip ci]"
+                  file_pattern: |
+                      ci-deps.json
+                      package-lock.json
+                      package.json
             - run: npm test --if-present
             - run: npm run full

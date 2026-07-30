@@ -1,45 +1,48 @@
 {
-    "name": "abstractplay-designer",
-    "private": true,
-    "version": "1.7.5",
-    "type": "module",
-    "scripts": {
-        "dev": "set NODE_ENV=development && vite",
-        "build-dev": "set NODE_ENV=development && vite build",
-        "build": "set NODE_ENV=production && vite build",
-        "preview": "set NODE_ENV=development && vite preview",
-        "check": "svelte-check --tsconfig ./tsconfig.json",
-        "deploy": "npx serverless client deploy --no-confirm",
-        "format": "prettier --write --plugin prettier-plugin-svelte .",
-        "schemas": "npx json2ts -i src/schemas/messages.json -o src/schemas/messages.d.ts",
-        "full": "npm run schemas && npm run format && npm run build && npm run deploy",
-        "npm-login": "npm login --scope=@abstractplay --auth-type=legacy --registry=https://npm.pkg.github.com"
-    },
-    "devDependencies": {
-        "@sveltejs/vite-plugin-svelte": "^2.4.2",
-        "@tsconfig/svelte": "^5.0.0",
-        "@types/rfdc": "^1.2.0",
-        "json-schema-to-typescript": "^13.0.2",
-        "prettier": "^3.0.2",
-        "prettier-plugin-svelte": "^3.0.3",
-        "serverless-finch": "^4.0.3",
-        "shx": "^0.4.0",
-        "svelte": "^4.0.5",
-        "svelte-check": "^3.4.6",
-        "tslib": "^2.6.0",
-        "typescript": "^5.0.2",
-        "vite": "^4.4.5"
-    },
-    "dependencies": {
-        "@abstractplay/renderer": "^1.0.0-ci-28557087704.0",
-        "@types/html2canvas": "^0.5.35",
-        "@zerodevx/svelte-toast": "^0.9.6",
-        "gif.js.optimized": "^1.0.1",
-        "honeycomb-grid": "^4.1.5",
-        "html2canvas": "^1.4.1",
-        "nanoclone": "^1.0.2",
-        "nanoid": "^4.0.2",
-        "peerjs": "^1.4.7",
-        "svelte-awesome-color-picker": "^3.1.4"
-    }
+  "name": "abstractplay-designer",
+  "private": true,
+  "version": "1.7.5",
+  "type": "module",
+  "scripts": {
+    "dev": "set NODE_ENV=development && vite",
+    "build-dev": "set NODE_ENV=development && vite build",
+    "build": "set NODE_ENV=production && vite build",
+    "preview": "set NODE_ENV=development && vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "deploy": "npx serverless client deploy --no-confirm",
+    "format": "prettier --write --plugin prettier-plugin-svelte .",
+    "schemas": "npx json2ts -i src/schemas/messages.json -o src/schemas/messages.d.ts",
+    "full": "npm run schemas && npm run format && npm run build && npm run deploy",
+    "npm-login": "npm login --scope=@abstractplay --auth-type=legacy --registry=https://npm.pkg.github.com"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@tsconfig/svelte": "^5.0.0",
+    "@types/rfdc": "^1.2.0",
+    "json-schema-to-typescript": "^13.0.2",
+    "prettier": "^3.0.2",
+    "prettier-plugin-svelte": "^3.0.3",
+    "serverless-finch": "^4.0.3",
+    "shx": "^0.4.0",
+    "svelte": "^4.0.5",
+    "svelte-check": "^3.4.6",
+    "tslib": "^2.6.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "@abstractplay/renderer": "1.0.0-ci-30491195223.0",
+    "@types/html2canvas": "^0.5.35",
+    "@zerodevx/svelte-toast": "^0.9.6",
+    "gif.js.optimized": "^1.0.1",
+    "honeycomb-grid": "^4.1.5",
+    "html2canvas": "^1.4.1",
+    "nanoclone": "^1.0.2",
+    "nanoid": "^4.0.2",
+    "peerjs": "^1.4.7",
+    "svelte-awesome-color-picker": "^3.1.4"
+  },
+  "overrides": {
+    "@abstractplay/renderer": "1.0.0-ci-30491195223.0"
+  }
 }
