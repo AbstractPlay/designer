@@ -60,6 +60,7 @@ jobs:
                 AP_SOURCE: ${{ github.event.client_payload.renderer_version && format('renderer-ci-{0}', github.event.client_payload.renderer_version) || '' }}
               run: node bin/install-ap-deps.mjs --stage prod --renderer-only
             - name: Sync dependency manifests
+              if: github.event_name == 'repository_dispatch'
               uses: stefanzweifel/git-auto-commit-action@v5
               with:
                   commit_message: "deps: sync AP versions [skip ci]"
