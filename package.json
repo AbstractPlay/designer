@@ -31,7 +31,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "@abstractplay/renderer": "1.0.0-ci-30491195223.0",
+    "@abstractplay/renderer": "1.0.0-ci-32782926153.0",
     "@types/html2canvas": "^0.5.35",
     "@zerodevx/svelte-toast": "^0.9.6",
     "gif.js.optimized": "^1.0.1",
@@ -43,6 +43,6 @@
     "svelte-awesome-color-picker": "^3.1.4"
   },
   "overrides": {
-    "@abstractplay/renderer": "1.0.0-ci-30491195223.0"
+    "@abstractplay/renderer": "1.0.0-ci-32782926153.0"
   }
 }
