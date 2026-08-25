@@ -215,35 +215,54 @@ function verifyGameslibProductionBuild(versions) {
     return;
   }
 
+  const gameslibRoot = path.join(ROOT, "node_modules", "@abstractplay", "gameslib");
   const metaPath = path.join(
-    ROOT,
-    "node_modules",
-    "@abstractplay",
-    "gameslib",
+    gameslibRoot,
     "build",
     "games",
     "_registry-meta.generated.json",
   );
-  if (!fs.existsSync(metaPath)) {
+  const flagsPath = path.join(
+    gameslibRoot,
+    "build",
+    "games",
+    "_build-flags.generated.js",
+  );
+  const installed = getInstalledVersion("@abstractplay/gameslib");
+
+  if (fs.existsSync(metaPath)) {
+    const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+    if (meta.production !== true) {
+      throw new Error(
+        `Refusing prod install: @abstractplay/gameslib@${installed} ` +
+          `has production=false in registry meta (${meta.gameCount} games, ` +
+          `${(meta.experimentalUids ?? []).length} experimental). ` +
+          `Pin a Production Server CI build in ci-deps.prod.json.`,
+      );
+    }
+    console.log(
+      `gameslib production registry verified (${meta.gameCount} games; experimental omitted)`,
+    );
+    return;
+  }
+
+  if (!fs.existsSync(flagsPath)) {
     throw new Error(
-      `Production deploy requires gameslib registry meta at ${metaPath}; is this a dev-registry build?`,
+      `Production deploy could not verify @abstractplay/gameslib@${installed}: ` +
+        `missing ${metaPath} and ${flagsPath}`,
     );
   }
 
-  const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
-  if (meta.production !== true) {
-    const installed = getInstalledVersion("@abstractplay/gameslib");
+  const flagsSource = fs.readFileSync(flagsPath, "utf8");
+  if (!/APGAMES_PRODUCTION\s*=\s*true/.test(flagsSource)) {
     throw new Error(
       `Refusing prod install: @abstractplay/gameslib@${installed} ` +
-        `has production=false in registry meta (${meta.gameCount} games, ` +
-        `${(meta.experimentalUids ?? []).length} experimental). ` +
+        `does not set APGAMES_PRODUCTION=true in ${flagsPath}. ` +
         `Pin a Production Server CI build in ci-deps.prod.json.`,
     );
   }
 
-  console.log(
-    `gameslib production registry verified (${meta.gameCount} games; experimental omitted)`,
-  );
+  console.log("gameslib production build verified (APGAMES_PRODUCTION=true)");
 }
 
 function writeCiDeps(versions) {
