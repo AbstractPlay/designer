@@ -53,14 +53,22 @@ jobs:
             - name: Install deps
               run: echo "@abstractplay:registry=https://npm.pkg.github.com/" >> .npmrc
             - run: echo "//npm.pkg.github.com/:_authToken=${{secrets.PAT_READ_PACKAGES}}" >> .npmrc
+            - name: Reject merge conflict markers in dep files
+              run: |
+                if grep -r '^<<<<<<<' package.json package-lock.json ci-deps.dev.json ci-deps.prod.json 2>/dev/null; then
+                  echo "Conflict markers found in dependency files"
+                  exit 1
+                fi
             - run: npm ci
-            - name: Check ci-deps manifests
+            - name: Validate ci-deps manifests
               run: node bin/check-ci-deps.mjs
             - name: Install pinned AP dependencies
               env:
                 AP_RENDERER_VERSION: ${{ github.event.client_payload.renderer_version }}
                 AP_SOURCE: ${{ github.event.client_payload.renderer_version && format('renderer-ci-{0}', github.event.client_payload.renderer_version) || '' }}
               run: node bin/install-ap-deps.mjs --stage prod --renderer-only
+            - name: Verify package.json matches ci-deps
+              run: node bin/check-ci-deps.mjs --stage prod --strict
             - name: Sync dependency manifests
               if: github.event_name == 'repository_dispatch'
               uses: stefanzweifel/git-auto-commit-action@v5
