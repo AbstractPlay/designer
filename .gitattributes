@@ -1,2 +1,5 @@
-# Keep production dependency pins when merging develop into main.
+# Keep production dependency pins when merging into main.
 ci-deps.prod.json merge=ours
+
+# Keep target-branch lockfile on cross-branch merges; run sync-deps if strict check fails.
+package-lock.json merge=ours
