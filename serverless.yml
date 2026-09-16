@@ -1,7 +1,7 @@
 service: abstractplay-designer
-org: perlkonig
+org: abstractplay
 
-frameworkVersion: "2 || 3"
+frameworkVersion: "4"
 
 provider:
     name: aws
