@@ -1,7 +1,7 @@
 {
   "name": "abstractplay-designer",
   "private": true,
-  "version": "1.7.5",
+  "version": "1.8.0",
   "type": "module",
   "scripts": {
     "dev": "set NODE_ENV=development && vite",
@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@abstractplay/renderer": "1.0.0-ci-33332479192.0",
+    "@randsum/roller": "^4.0.0",
     "@types/html2canvas": "^0.5.35",
     "@zerodevx/svelte-toast": "^0.9.6",
     "gif.js.optimized": "^1.0.1",
@@ -47,6 +48,7 @@
     "svelte-awesome-color-picker": "^3.1.4"
   },
   "overrides": {
-    "@abstractplay/renderer": "1.0.0-ci-33332479192.0"
+    "@abstractplay/renderer": "1.0.0-ci-33332479192.0",
+    "esbuild": "0.21.5"
   }
 }

@@ -90,6 +90,31 @@
             },
             "required": ["type"],
             "additionalProperties": false
+        },
+        {
+            "description": "Share a dice roll result with connected peers",
+            "properties": {
+                "type": {
+                    "enum": ["diceRoll"]
+                },
+                "notation": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "number"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": ["number", "string"]
+                    }
+                },
+                "roller": {
+                    "type": "string"
+                }
+            },
+            "required": ["type", "notation", "total", "values"],
+            "additionalProperties": false
         }
     ]
 }

@@ -14,6 +14,13 @@ export default defineConfig({
     define: {
         __APP_VERSION__: JSON.stringify(pkg.version),
     },
+    optimizeDeps: {
+        esbuildOptions: {
+            supported: {
+                "import-attributes": true,
+            },
+        },
+    },
     // base: process.env.NODE_ENV === "production" ? "/" : "/designer/",
     resolve: {
         alias: [

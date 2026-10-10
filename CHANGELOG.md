@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-10-10
+
+### Added
+
+-   Play tab dice roller: notation input, roll results, saved preset buttons (localStorage) that roll on click, and a link plus quick reference for RANDSUM dice notation. When peers are connected, the talking-stick holder’s rolls sync to everyone (including recent roll history for newly joined peers).
+
 ## [1.7.5] - 2026-02-27
 
 ### Added

@@ -7,6 +7,11 @@
     import type { APDesignerClientMessages } from "#/schemas/messages";
     import { state, type RenderRepModified } from "#/stores/writeState";
     import { haveToken } from "#/stores/writeToken";
+    import {
+        applyDiceRoll,
+        diceRollMessageFromEvent,
+        latestDiceRoll,
+    } from "#/stores/writeDiceRoll";
     import { onMount } from "svelte";
 
     let remotePeer: string;
@@ -70,6 +75,10 @@
                 game: JSON.stringify($state),
             };
             conn.send(msg);
+            const lastRoll = latestDiceRoll();
+            if (lastRoll !== undefined) {
+                conn.send(diceRollMessageFromEvent(lastRoll));
+            }
         }
 
         return newlst;
@@ -156,6 +165,13 @@
                 $haveToken = true;
             } else if (msg.type === "takeToken") {
                 $haveToken = false;
+            } else if (msg.type === "diceRoll") {
+                applyDiceRoll({
+                    notation: msg.notation,
+                    total: msg.total,
+                    values: msg.values,
+                    roller: msg.roller,
+                });
             } else {
                 console.error(
                     "Unrecognized command!\nPeer ID: " +

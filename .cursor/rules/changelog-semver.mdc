@@ -1,0 +1,46 @@
+---
+description: Designer changelog — semver releases, not monthly AP rollup
+alwaysApply: true
+---
+
+# Changelog (abstractplay-designer)
+
+This repository uses **Semantic Versioning** and **per-release changelog sections**. It does **not** follow the monthly batching workflow used in other Abstract Play repos. **This rule takes precedence** over user-level “AP repos — changelog entries batched by calendar month” guidance when working in this project.
+
+## When to update
+
+Document **user-visible** changes in [`CHANGELOG.md`](CHANGELOG.md): new features, behaviour changes, notable fixes, removals. Skip refactors, test-only work, and trivial copy unless the team would notice in the app.
+
+When shipping a release (or preparing a version bump in the same change set):
+
+1. Bump **`package.json`** `"version"` to match the new semver release.
+2. Add a **new dated section** at the top of the changelog (immediately below the Keep a Changelog intro), **above** older `## [x.y.z]` headers.
+
+## Section format
+
+- Header: `## [MAJOR.MINOR.PATCH] - YYYY-MM-DD` (release date for that version).
+- Use standard headings: `### Added`, `### Changed`, `### Fixed`, `### Removed` as appropriate.
+- Bullets: four spaces after the dash, consistent with existing entries (`-   ...`).
+- **One version per section** — do not merge multiple releases into one month or reuse an older section’s date for unrelated work.
+
+## Semver hints
+
+- **PATCH** — backward-compatible bug fixes.
+- **MINOR** — backward-compatible new functionality.
+- **MAJOR** — breaking changes for users or saved data (rare; call out breaking bullets clearly).
+
+## Do not
+
+- Append to a prior month’s section or “roll up” entries across calendar months.
+- Use `[Unreleased]` or `1.0.0-ci`-style CI version labels (other AP repos use those; designer does not).
+- Change `CHANGELOG.md` without aligning `package.json` when the change is meant to ship as a named version.
+
+## Example
+
+```markdown
+## [1.8.0] - 2026-10-10
+
+### Added
+
+-   Play tab dice roller with saved notation presets (localStorage).
+```

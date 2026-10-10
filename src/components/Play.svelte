@@ -15,6 +15,7 @@
         5
     );
     import PiecePreview from "./PiecePreview.svelte";
+    import DiceRoller from "./DiceRoller.svelte";
     import type { APDesignerClientMessages } from "#/schemas/messages";
     import Modal from "./Modal.svelte";
     import type {
@@ -149,8 +150,20 @@
     //     floodEnabled = true;
     // }
 
+    const isTextEntryTarget = (target: EventTarget | null) => {
+        if (!(target instanceof HTMLElement)) {
+            return false;
+        }
+        const tag = target.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
+            return true;
+        }
+        return target.isContentEditable;
+    };
+
     const onKeyDown = (event: KeyboardEvent) => {
         if (event.repeat) return;
+        if (isTextEntryTarget(event.target)) return;
         if (
             [
                 "1",
@@ -347,6 +360,7 @@
                 </div>
             </div>
         </div>
+        <DiceRoller />
         {#if $peers.length > 0}
             <div class="box">
                 {#if $haveToken}
