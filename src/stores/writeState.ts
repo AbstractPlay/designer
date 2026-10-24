@@ -1,7 +1,5 @@
 import { writable } from "svelte/store";
 import type { APRenderRep } from "@abstractplay/renderer";
-import { stack } from "./writeStack";
-import deepclone from "nanoclone";
 import type {
     AnnotationBasic,
     BoardBasic,
@@ -58,5 +56,4 @@ export const state = writable(initialState);
 
 state.subscribe((v) => {
     localStorage.setItem("state", JSON.stringify(v));
-    stack.update((s) => [...deepclone(s), v]);
 });

@@ -48,6 +48,7 @@
                     class="button apButtonAlert"
                     on:click="{() => {
                         localStorage.removeItem('stack');
+                        localStorage.removeItem('stackRedo');
                         localStorage.removeItem('state');
                         location.reload();
                     }}"

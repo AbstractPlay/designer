@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-10-24
+
+### Added
+
+-   Play tab **Redo** (toolbar button plus Ctrl+Y or Ctrl+Shift+Z). Undo now steps back one saved state at a time; new edits clear the redo branch.
+
+### Changed
+
+-   Undo/redo history is recorded without the previous triple-snapshot pop behaviour.
+
+### Fixed
+
+-   Play redo toolbar icon (Font Awesome 4 `fa-repeat`). Undo/redo now steps once per piece placement by recording a single history entry per click and skipping duplicate consecutive snapshots.
+
 ## [1.8.0] - 2026-10-15
 
 ### Added

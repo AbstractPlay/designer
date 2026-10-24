@@ -1,6 +1,12 @@
 <script lang="ts">
     import { state, type RenderRepModified } from "#/stores/writeState";
-    import { stack } from "#/stores/writeStack";
+    import deepclone from "nanoclone";
+    import {
+        canRedo,
+        canUndo,
+        redoHistory,
+        undoHistory,
+    } from "#/stores/writeStack";
     import { peers } from "#/stores/writePeers";
     import { haveToken } from "#/stores/writeToken";
     import { capQ } from "#/stores/writeCaptureQueue";
@@ -38,13 +44,17 @@
 
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
-        if (selectedPiece !== undefined) {
+        if (selectedPiece === undefined) {
+            return false;
+        }
+        state.update((st) => {
+            const next = deepclone(st) as RenderRepModified;
             if (floodEnabled) {
-                const colour = ($state.legend[selectedPiece] as Glyph)
+                const colour = (next.legend[selectedPiece] as Glyph)
                     .colour as string | number;
                 // I will only place one point per marker, to simplify this code
                 const markers: MarkerFlood[] =
-                    ($state.board.markers as MarkerFlood[]) || [];
+                    (next.board.markers as MarkerFlood[]) || [];
                 const idx = markers.findIndex(
                     (m) => m.points[0].col === col && m.points[0].row === row
                 );
@@ -61,15 +71,14 @@
                         opacity: 1,
                     });
                 }
-                $state.board.markers = JSON.parse(JSON.stringify(markers));
+                next.board.markers = JSON.parse(JSON.stringify(markers));
             } else {
                 let matrix: string[][][] = [];
-                if ($state.pieces !== null) {
+                if (next.pieces !== null) {
                     matrix = JSON.parse(
-                        JSON.stringify($state.pieces)
+                        JSON.stringify(next.pieces)
                     ) as string[][][];
                 }
-                // prefill the matrix as necessary
                 while (row >= matrix.length) {
                     matrix.push([[]]);
                 }
@@ -77,28 +86,24 @@
                     matrix[row].push([]);
                 }
 
-                // add/remove piece
-                let stack = matrix[row][col];
+                let cellStack = matrix[row][col];
                 if (
                     selectedPiece === "_eraser" ||
-                    (stack.length === 1 &&
+                    (cellStack.length === 1 &&
                         !stackingEnabled &&
-                        stack[stack.length - 1] === selectedPiece)
+                        cellStack[cellStack.length - 1] === selectedPiece)
                 ) {
-                    stack.pop();
+                    cellStack.pop();
+                } else if (stackingEnabled) {
+                    cellStack.push(selectedPiece);
                 } else {
-                    if (stackingEnabled) {
-                        stack.push(selectedPiece);
-                    } else {
-                        matrix[row][col] = [selectedPiece];
-                    }
+                    matrix[row][col] = [selectedPiece];
                 }
 
-                // save
-                $state.pieces = JSON.parse(JSON.stringify(matrix));
+                next.pieces = JSON.parse(JSON.stringify(matrix));
             }
-            $state = $state;
-        }
+            return next;
+        });
         return false;
     };
 
@@ -164,6 +169,19 @@
     const onKeyDown = (event: KeyboardEvent) => {
         if (event.repeat) return;
         if (isTextEntryTarget(event.target)) return;
+        if (event.ctrlKey || event.metaKey) {
+            const key = event.key.toLowerCase();
+            if (key === "z" && !event.shiftKey) {
+                event.preventDefault();
+                undoHistory();
+                return;
+            }
+            if (key === "y" || (key === "z" && event.shiftKey)) {
+                event.preventDefault();
+                redoHistory();
+                return;
+            }
+        }
         if (
             [
                 "1",
@@ -241,7 +259,8 @@
     <p>
         On desktop, press the keys 1–9 to select one of the first nine pieces in
         the legend. Pressing 0 or the Delete key will select the eraser. Use the
-        S key to toggle stacking and the F key to toggle flood filling.
+        S key to toggle stacking and the F key to toggle flood filling. Use
+        Ctrl+Z to undo and Ctrl+Y (or Ctrl+Shift+Z) to redo.
     </p>
 </div>
 
@@ -271,14 +290,26 @@
             <div class="control">
                 <button
                     class="button apButton is-small"
-                    on:click="{() => {
-                        stack.update((s) => s.slice(0, -3));
-                        if ($stack.length > 0) {
-                            $state = $stack[$stack.length - 1];
-                        }
-                    }}"
+                    disabled="{!$canUndo}"
+                    on:click="{undoHistory}"
                     ><span class="icon"
                         ><i class="fa fa-undo" aria-hidden="true" title="Undo"
+                        ></i></span
+                    ></button
+                >
+            </div>
+        </div>
+        <div class="level-item">
+            <div class="control">
+                <button
+                    class="button apButton is-small"
+                    disabled="{!$canRedo}"
+                    on:click="{redoHistory}"
+                    ><span class="icon"
+                        ><i
+                            class="fa fa-repeat"
+                            aria-hidden="true"
+                            title="Redo"
                         ></i></span
                     ></button
                 >
