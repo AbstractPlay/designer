@@ -25,10 +25,71 @@
     import type { APDesignerClientMessages } from "#/schemas/messages";
     import Modal from "./Modal.svelte";
     import type {
+        MarkerFence,
         MarkerFlood,
         Glyph,
     } from "@abstractplay/renderer/build/schemas/schema";
     import { colourContext } from "#/stores/writeContext";
+
+    /** Trim each end; fraction of segment length (matches renderer `line` / `fence` markers). */
+    const FENCE_SHORTEN = 0.1;
+
+    const FENCE_SIDES = new Set<string>([
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+    ]);
+
+    const styleSupportsFence = (style: string | undefined): boolean => {
+        if (style === undefined) {
+            return false;
+        }
+        if (style === "squares-diamonds") {
+            return false;
+        }
+        if (style.startsWith("squares")) {
+            return true;
+        }
+        if (style.startsWith("hex-odd") || style.startsWith("hex-even")) {
+            return true;
+        }
+        return false;
+    };
+
+    const markerColourFromLegend = (
+        legend: RenderRepModified["legend"],
+        key: string
+    ): string | number | undefined => {
+        const glyph = legend[key] as Glyph;
+        return glyph.colour as string | number | undefined;
+    };
+
+    let stackingEnabled = false;
+    let floodEnabled = false;
+    let floodSupported = true;
+    let fenceEnabled = false;
+    let fenceSupported = false;
+    let selectedPiece: string | undefined;
+    let previewDiv: HTMLDivElement;
+
+    const setFloodEnabled = (enabled: boolean) => {
+        floodEnabled = enabled;
+        if (enabled) {
+            fenceEnabled = false;
+        }
+    };
+
+    const setFenceEnabled = (enabled: boolean) => {
+        fenceEnabled = enabled;
+        if (enabled) {
+            floodEnabled = false;
+        }
+    };
 
     onMount(() => {
         if (
@@ -42,16 +103,26 @@
         }
     });
 
+    $: fenceSupported = styleSupportsFence($state.board?.style);
+    $: if (!fenceSupported) {
+        fenceEnabled = false;
+    }
+
     const boardClick = (row: number, col: number, piece: string) => {
         console.log(`Row: ${row}, Col: ${col}, Piece: ${piece}`);
         if (selectedPiece === undefined) {
             return false;
         }
+        if (fenceEnabled && !FENCE_SIDES.has(piece)) {
+            return false;
+        }
         state.update((st) => {
             const next = deepclone(st) as RenderRepModified;
             if (floodEnabled) {
-                const colour = (next.legend[selectedPiece] as Glyph)
-                    .colour as string | number;
+                const colour = markerColourFromLegend(
+                    next.legend,
+                    selectedPiece
+                ) as string | number;
                 // I will only place one point per marker, to simplify this code
                 const markers: MarkerFlood[] =
                     (next.board.markers as MarkerFlood[]) || [];
@@ -72,6 +143,43 @@
                     });
                 }
                 next.board.markers = JSON.parse(JSON.stringify(markers));
+            } else if (fenceEnabled) {
+                const side = piece as MarkerFence["side"];
+                const colour = markerColourFromLegend(
+                    next.legend,
+                    selectedPiece
+                );
+                const allMarkers = [...(next.board.markers || [])];
+                const fences = allMarkers.filter(
+                    (m): m is MarkerFence => m.type === "fence"
+                );
+                const other = allMarkers.filter((m) => m.type !== "fence");
+                const idx = fences.findIndex(
+                    (m) =>
+                        m.cell.row === row &&
+                        m.cell.col === col &&
+                        m.side === side
+                );
+                let prev: string | number | undefined;
+                if (idx !== -1) {
+                    prev = fences[idx].colour as number | string | undefined;
+                    fences.splice(idx, 1);
+                }
+                if (prev === undefined || prev !== colour) {
+                    const marker: MarkerFence = {
+                        type: "fence",
+                        cell: { row, col },
+                        side,
+                        shorten: FENCE_SHORTEN,
+                    };
+                    if (colour !== undefined) {
+                        marker.colour = colour;
+                    }
+                    fences.push(marker);
+                }
+                next.board.markers = JSON.parse(
+                    JSON.stringify([...other, ...fences])
+                );
             } else {
                 let matrix: string[][][] = [];
                 if (next.pieces !== null) {
@@ -107,23 +215,29 @@
         return false;
     };
 
-    let previewDiv: HTMLDivElement;
     afterUpdate(() => {
         const opts: IRenderOptions = {
             colourContext: $colourContext,
             divelem: previewDiv,
             boardClick,
         };
+        let renderState = $state;
+        if (fenceEnabled && fenceSupported) {
+            const options = [...($state.options ?? [])];
+            if (!options.includes("clickable-edges")) {
+                options.push("clickable-edges");
+            }
+            renderState = { ...$state, options };
+        }
         try {
             previewDiv.innerHTML = null;
             previewDiv.style.backgroundColor = $colourContext.background;
-            APRender($state, opts);
+            APRender(renderState, opts);
         } catch (err) {
             previewDiv.innerHTML = `<p>Unable to render the piece with the current parameters.</p>`;
         }
     });
 
-    let selectedPiece: string | undefined;
     const handlePcSelect = (
         e: MouseEvent | TouchEvent | KeyboardEvent,
         key: string
@@ -146,10 +260,6 @@
             pieces: `${newkey}`,
         };
     };
-
-    let stackingEnabled = false;
-    let floodEnabled = false;
-    let floodSupported = true;
 
     // $: if (!floodEnabled && $state.board.style === "squares-diamonds") {
     //     floodEnabled = true;
@@ -199,6 +309,8 @@
                 "S",
                 "f",
                 "F",
+                "n",
+                "N",
             ].includes(event.key)
         ) {
             if (event.key === "Delete" || event.key === "0") {
@@ -207,9 +319,15 @@
                 stackingEnabled = !stackingEnabled;
             } else if (event.key === "f" || event.key === "F") {
                 if (floodSupported) {
-                    floodEnabled = !floodEnabled;
+                    setFloodEnabled(!floodEnabled);
                 } else {
-                    floodEnabled = false;
+                    setFloodEnabled(false);
+                }
+            } else if (event.key === "n" || event.key === "N") {
+                if (fenceSupported) {
+                    setFenceEnabled(!fenceEnabled);
+                } else {
+                    setFenceEnabled(false);
                 }
             } else {
                 const keys = Object.keys($state.legend);
@@ -259,8 +377,9 @@
     <p>
         On desktop, press the keys 1–9 to select one of the first nine pieces in
         the legend. Pressing 0 or the Delete key will select the eraser. Use the
-        S key to toggle stacking and the F key to toggle flood filling. Use
-        Ctrl+Z to undo and Ctrl+Y (or Ctrl+Shift+Z) to redo.
+        S key to toggle stacking, the F key to toggle flood filling, and the N
+        key to toggle fence drawing on supported boards. Use Ctrl+Z to undo and
+        Ctrl+Y (or Ctrl+Shift+Z) to redo.
     </p>
 </div>
 
@@ -278,8 +397,28 @@
             <div class="level-item">
                 <div class="control">
                     <label class="checkbox">
-                        <input type="checkbox" bind:checked="{floodEnabled}" />
+                        <input
+                            type="checkbox"
+                            checked="{floodEnabled}"
+                            on:change="{(e) =>
+                                setFloodEnabled(e.currentTarget.checked)}"
+                        />
                         Enable flood fill?
+                    </label>
+                </div>
+            </div>
+        {/if}
+        {#if fenceSupported}
+            <div class="level-item">
+                <div class="control">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            checked="{fenceEnabled}"
+                            on:change="{(e) =>
+                                setFenceEnabled(e.currentTarget.checked)}"
+                        />
+                        Enable fence?
                     </label>
                 </div>
             </div>
