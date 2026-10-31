@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2026-10-31
+
+### Added
+
+-   Play tab **fence** drawing on supported boards (`squares*` except `squares-diamonds`, and rect-of-hex): **Enable fence?** checkbox, **N** keyboard toggle, edge clicks with the selected legend piece colour (same model as flood fill). Fences are written with `shorten: 0.1` so segment ends are inset slightly at corners.
+
 ## [1.9.0] - 2026-10-24
 
 ### Added
