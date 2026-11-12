@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-11-12
+
+### Added
+
+-   Play tab **Scores** widget: add labeled score rows with starting values, increment/decrement controls, and remove; rows persist in localStorage. When peers are connected, the talking-stick holder’s score table syncs to everyone (full snapshot on join and on each change).
+
+### Changed
+
+-   Play tab layout on narrow screens: piece picker stays adjacent to the board; scores, dice roller, and talking-stick UI appear below the board. Wide screens keep a left column (pieces, scores, dice, peers) beside the board.
+
 ## [1.9.1] - 2026-10-31
 
 ### Added

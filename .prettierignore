@@ -1,0 +1,13 @@
+# npm manifests and CI dep pins — not Prettier's job
+package.json
+package-lock.json
+ci-deps.dev.json
+ci-deps.prod.json
+
+# Application source only; everything else stays as-is
+**
+!src/
+!src/**
+
+# Schema output is generated (npm run schemas)
+src/schemas/messages.d.ts

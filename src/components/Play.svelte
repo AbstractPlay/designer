@@ -22,6 +22,7 @@
     );
     import PiecePreview from "./PiecePreview.svelte";
     import DiceRoller from "./DiceRoller.svelte";
+    import Scores from "./Scores.svelte";
     import type { APDesignerClientMessages } from "#/schemas/messages";
     import Modal from "./Modal.svelte";
     import type {
@@ -445,10 +446,7 @@
                     disabled="{!$canRedo}"
                     on:click="{redoHistory}"
                     ><span class="icon"
-                        ><i
-                            class="fa fa-repeat"
-                            aria-hidden="true"
-                            title="Redo"
+                        ><i class="fa fa-repeat" aria-hidden="true" title="Redo"
                         ></i></span
                     ></button
                 >
@@ -498,83 +496,88 @@
     </div>
 </div>
 
-<div class="columns">
-    <div class="column is-one-third">
-        <div class="box">
-            <div class="columns is-multiline is-mobile">
-                {#each Object.keys($state.legend) as pc}
+<div class="play-grid">
+    <div class="play-sidebar">
+        <div class="play-pieces">
+            <div class="box">
+                <div class="columns is-multiline is-mobile">
+                    {#each Object.keys($state.legend) as pc}
+                        <div
+                            class="column is-narrow piece{selectedPiece === pc
+                                ? ' selected'
+                                : ''}"
+                            on:click="{(e) => handlePcSelect(e, pc)}"
+                            on:keydown="{(e) => handlePcSelect(e, pc)}"
+                            role="button"
+                            tabindex="0"
+                        >
+                            <PiecePreview renderrep="{toRep(pc)}" />
+                        </div>
+                    {/each}
                     <div
-                        class="column is-narrow piece{selectedPiece === pc
+                        class="column is-narrow piece{selectedPiece === '_eraser'
                             ? ' selected'
                             : ''}"
-                        on:click="{(e) => handlePcSelect(e, pc)}"
-                        on:keydown="{(e) => handlePcSelect(e, pc)}"
+                        on:click="{(e) => handlePcSelect(e, '_eraser')}"
+                        on:keydown="{(e) => handlePcSelect(e, '_eraser')}"
                         role="button"
                         tabindex="0"
                     >
-                        <PiecePreview renderrep="{toRep(pc)}" />
+                        <span class="icon" style="width: 100%; height: 100%;">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </span>
                     </div>
-                {/each}
-                <div
-                    class="column is-narrow piece{selectedPiece === '_eraser'
-                        ? ' selected'
-                        : ''}"
-                    on:click="{(e) => handlePcSelect(e, '_eraser')}"
-                    on:keydown="{(e) => handlePcSelect(e, '_eraser')}"
-                    role="button"
-                    tabindex="0"
-                >
-                    <span class="icon" style="width: 100%; height: 100%;">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                    </span>
                 </div>
             </div>
         </div>
-        <DiceRoller />
-        {#if $peers.length > 0}
-            <div class="box">
-                {#if $haveToken}
-                    <div class="content">
-                        <p class="is-success">You have the talking stick.</p>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <div class="select">
-                                <select bind:value="{selectedPeer}">
-                                    {#each $peers as peer}
-                                        <option value="{peer.id}"
-                                            >{peer.alias}</option
-                                        >
-                                    {/each}
-                                </select>
+        <div class="play-widgets">
+            <Scores />
+            <DiceRoller />
+            {#if $peers.length > 0}
+                <div class="box">
+                    {#if $haveToken}
+                        <div class="content">
+                            <p class="is-success">You have the talking stick.</p>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <div class="select">
+                                    <select bind:value="{selectedPeer}">
+                                        {#each $peers as peer}
+                                            <option value="{peer.id}"
+                                                >{peer.alias}</option
+                                            >
+                                        {/each}
+                                    </select>
+                                </div>
                             </div>
+                            <div class="control">
+                                <button
+                                    class="button apButton"
+                                    on:click="{handleGiveToken}"
+                                    >Give talking stick</button
+                                >
+                            </div>
+                        </div>
+                    {:else}
+                        <div class="content">
+                            <p class="is-danger">
+                                You do not have the talking stick.
+                            </p>
                         </div>
                         <div class="control">
                             <button
                                 class="button apButton"
-                                on:click="{handleGiveToken}"
-                                >Give talking stick</button
+                                on:click="{() => (showTakeModal = true)}"
+                                >Take talking stick</button
                             >
                         </div>
-                    </div>
-                {:else}
-                    <div class="content">
-                        <p class="is-danger">
-                            You do not have the talking stick.
-                        </p>
-                    </div>
-                    <div class="control">
-                        <button
-                            class="button apButton"
-                            on:click="{() => (showTakeModal = true)}"
-                            >Take talking stick</button
-                        >
-                    </div>
-                {/if}
-            </div>
-        {/if}
+                    {/if}
+                </div>
+            {/if}
+        </div>
     </div>
-    <div class="column">
+    <div class="play-board">
         <div bind:this="{previewDiv}" class="box" id="captureSource"></div>
     </div>
 </div>
@@ -611,6 +614,48 @@
 </Modal>
 
 <style>
+    .play-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    /* Sidebar wrapper disappears on narrow screens; order keeps board between
+       picker and widgets. */
+    .play-sidebar {
+        display: contents;
+    }
+    .play-pieces {
+        order: 1;
+    }
+    .play-board {
+        order: 2;
+    }
+    .play-widgets {
+        order: 3;
+    }
+    @media screen and (min-width: 769px) {
+        .play-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+            align-items: start;
+        }
+        .play-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .play-board {
+            grid-column: 2;
+            grid-row: 1;
+            order: unset;
+        }
+        .play-pieces,
+        .play-widgets {
+            order: unset;
+        }
+    }
     .selected {
         border: 2px dotted black;
     }

@@ -12,6 +12,12 @@
         diceRollMessageFromEvent,
         latestDiceRoll,
     } from "#/stores/writeDiceRoll";
+    import {
+        applyPlayScores,
+        playScores,
+        scoresReplaceMessageFromRows,
+    } from "#/stores/writeScores";
+    import { get } from "svelte/store";
     import { onMount } from "svelte";
 
     let remotePeer: string;
@@ -79,6 +85,7 @@
             if (lastRoll !== undefined) {
                 conn.send(diceRollMessageFromEvent(lastRoll));
             }
+            conn.send(scoresReplaceMessageFromRows(get(playScores)));
         }
 
         return newlst;
@@ -172,6 +179,8 @@
                     values: msg.values,
                     roller: msg.roller,
                 });
+            } else if (msg.type === "scoresReplace") {
+                applyPlayScores(msg.rows);
             } else {
                 console.error(
                     "Unrecognized command!\nPeer ID: " +

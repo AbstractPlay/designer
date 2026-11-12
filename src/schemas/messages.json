@@ -115,6 +115,35 @@
             },
             "required": ["type", "notation", "total", "values"],
             "additionalProperties": false
+        },
+        {
+            "description": "Replace the full score table with connected peers",
+            "properties": {
+                "type": {
+                    "enum": ["scoresReplace"]
+                },
+                "rows": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "label": {
+                                "type": "string"
+                            },
+                            "value": {
+                                "type": "number"
+                            }
+                        },
+                        "required": ["id", "label", "value"],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "required": ["type", "rows"],
+            "additionalProperties": false
         }
     ]
 }

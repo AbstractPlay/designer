@@ -1,7 +1,7 @@
 {
   "name": "abstractplay-designer",
   "private": true,
-  "version": "1.9.1",
+  "version": "1.10.0",
   "type": "module",
   "scripts": {
     "dev": "set NODE_ENV=development && vite",
@@ -10,7 +10,7 @@
     "preview": "set NODE_ENV=development && vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "deploy": "npx serverless client deploy --no-confirm",
-    "format": "prettier --write --plugin prettier-plugin-svelte .",
+    "format": "prettier --write --plugin prettier-plugin-svelte src",
     "schemas": "npx json2ts -i src/schemas/messages.json -o src/schemas/messages.d.ts",
     "full": "npm run schemas && npm run format && npm run build && npm run deploy",
     "npm-login": "npm login --scope=@abstractplay --auth-type=legacy --registry=https://npm.pkg.github.com",

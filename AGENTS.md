@@ -9,7 +9,7 @@ Svelte + Vite playground for designing boards and pieces with the [@abstractplay
 | `npm run dev` | Local dev server |
 | `npm run build` | Production build |
 | `npm run check` | `svelte-check` / TypeScript |
-| `npm run format` | Prettier |
+| `npm run format` | Prettier (`src/` only; see `.prettierignore`) |
 
 Do not commit unless the user explicitly asks. Do not push unless asked.
 

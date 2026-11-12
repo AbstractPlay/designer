@@ -40,4 +40,12 @@ export type APDesignerClientMessages =
       total: number;
       values: (number | string)[];
       roller?: string;
+    }
+  | {
+      type: "scoresReplace";
+      rows: {
+        id: string;
+        label: string;
+        value: number;
+      }[];
     };
