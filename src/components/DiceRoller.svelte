@@ -6,11 +6,11 @@
         RandsumError,
     } from "@randsum/roller";
     import { toast } from "@zerodevx/svelte-toast";
+    import { dicePresets, MAX_DICE_PRESETS } from "#/stores/writeDicePresets";
     import {
-        dicePresets,
-        MAX_DICE_PRESETS,
-    } from "#/stores/writeDicePresets";
-    import { diceRollHistory, recordAndBroadcastDiceRoll } from "#/stores/writeDiceRoll";
+        diceRollHistory,
+        recordAndBroadcastDiceRoll,
+    } from "#/stores/writeDiceRoll";
     import { peers } from "#/stores/writePeers";
     import { haveToken } from "#/stores/writeToken";
 
@@ -24,8 +24,7 @@
     $: lastNotation = latest?.notation;
 
     let presetName: string;
-    $: presetNameEmpty =
-        presetName === undefined || /^\s*$/.test(presetName);
+    $: presetNameEmpty = presetName === undefined || /^\s*$/.test(presetName);
     $: presetNameExists =
         !presetNameEmpty && $dicePresets.has(presetName.trim());
 
@@ -105,8 +104,7 @@
 
     const handleDeletePreset = (label: string) => {
         dicePresets.update(
-            (val) =>
-                new Map([...val.entries()].filter(([k]) => k !== label))
+            (val) => new Map([...val.entries()].filter(([k]) => k !== label))
         );
     };
 </script>
@@ -133,9 +131,8 @@
                 />
             </div>
             <div class="control">
-                <button
-                    class="button apButton is-small"
-                    on:click="{handleRoll}">Roll</button
+                <button class="button apButton is-small" on:click="{handleRoll}"
+                    >Roll</button
                 >
             </div>
         </div>
@@ -179,8 +176,7 @@
     {/if}
 
     <div class="field">
-        <label class="label is-small" for="dicePresetName"
-            >Save as preset</label
+        <label class="label is-small" for="dicePresetName">Save as preset</label
         >
         <div class="control">
             <input
@@ -197,14 +193,12 @@
                 on:click="{handleSavePreset}">Save</button
             >
         </div>
-        <p
-            class="help {presetNameExists ? 'is-danger' : 'is-success'}"
-        >
+        <p class="help {presetNameExists ? 'is-danger' : 'is-success'}">
             {presetNameExists
                 ? "That name already exists. Saving will overwrite."
                 : !presetNameEmpty
-                  ? "That name is available."
-                  : ""}
+                ? "That name is available."
+                : ""}
         </p>
     </div>
 
@@ -230,10 +224,7 @@
                             }}"
                         >
                             <span class="icon is-small">
-                                <i
-                                    class="fa fa-times"
-                                    aria-hidden="true"
-                                ></i>
+                                <i class="fa fa-times" aria-hidden="true"></i>
                             </span>
                         </button>
                     </span>
@@ -247,22 +238,22 @@
         <div class="content is-small">
             <ul>
                 <li><code>d20</code>, <code>4d6</code>, <code>4d6+2</code></li>
-                <li
-                    ><code>4d6L</code> / <code>4d6H</code> — drop lowest /
-                    highest</li
-                >
-                <li
-                    ><code>2d20L</code> / <code>2d20H</code> — advantage /
-                    disadvantage style</li
-                >
-                <li><code>4d6!</code> explode; <code>d%</code>; <code>4dF</code></li>
+                <li>
+                    <code>4d6L</code> / <code>4d6H</code> — drop lowest / highest
+                </li>
+                <li>
+                    <code>2d20L</code> / <code>2d20H</code> — advantage / disadvantage
+                    style
+                </li>
+                <li>
+                    <code>4d6!</code> explode; <code>d%</code>; <code>4dF</code>
+                </li>
             </ul>
             <p>
                 Uses <a
                     href="https://notation.randsum.dev"
                     target="_blank"
-                    rel="noopener noreferrer"
-                    >RANDSUM dice notation (RDN)</a
+                    rel="noopener noreferrer">RANDSUM dice notation (RDN)</a
                 > — see the full modifier list there.
             </p>
         </div>

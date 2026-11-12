@@ -515,7 +515,8 @@
                         </div>
                     {/each}
                     <div
-                        class="column is-narrow piece{selectedPiece === '_eraser'
+                        class="column is-narrow piece{selectedPiece ===
+                        '_eraser'
                             ? ' selected'
                             : ''}"
                         on:click="{(e) => handlePcSelect(e, '_eraser')}"
@@ -537,7 +538,9 @@
                 <div class="box">
                     {#if $haveToken}
                         <div class="content">
-                            <p class="is-success">You have the talking stick.</p>
+                            <p class="is-success">
+                                You have the talking stick.
+                            </p>
                         </div>
                         <div class="field">
                             <div class="control">

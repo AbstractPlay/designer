@@ -66,15 +66,15 @@
         ],
         [
             "rect-of-tri",
-            "A rectangular board derived from hex-of-tri where pieces are placed on the vertices. The `no-border` option will omit the vertical lines on the left and right."
+            "A rectangular board derived from hex-of-tri where pieces are placed on the vertices. The `no-border` option will omit the vertical lines on the left and right.",
         ],
         [
             "pentagonal",
-            "A pentagonal board where the centre cell has only five connections"
+            "A pentagonal board where the centre cell has only five connections",
         ],
         [
             "pentagonal-bluestone",
-            "A pentagonal board where the outer nodes are modified slightly, developed specifically for the game Bluestone"
+            "A pentagonal board where the outer nodes are modified slightly, developed specifically for the game Bluestone",
         ],
         [
             "hex-odd-f",
@@ -103,7 +103,7 @@
         ],
         [
             "hex-of-tri-f",
-            "Same as `hex-of-tri` but you play on the spaces. Pieces automatically scale."
+            "Same as `hex-of-tri` but you play on the spaces. Pieces automatically scale.",
         ],
         [
             "hex-of-cir",
@@ -135,10 +135,7 @@
             "pyramid-hex",
             "The bottom half of a hexhex board stretched so the left half of the top row overlaps with the right half",
         ],
-        [
-            "sowing-round",
-            "A circular board intended for certain sowing games."
-        ],
+        ["sowing-round", "A circular board intended for certain sowing games."],
     ]);
     import type { ValidOption } from "#/stores/writeRendererOptions";
     const allOptions: [ValidOption, string | null][] = [
@@ -808,7 +805,10 @@
                             bind:hex="{$colourContext.board}"
                             on:change="{(e) =>
                                 e.detail.hex &&
-                                colourContext.update((v) => ({ ...v, board: e.detail.hex }))}"
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    board: e.detail.hex,
+                                }))}"
                             position="responsive"
                         />
                     </div>
@@ -821,7 +821,10 @@
                             bind:hex="{$colourContext.strokes}"
                             on:change="{(e) =>
                                 e.detail.hex &&
-                                colourContext.update((v) => ({ ...v, strokes: e.detail.hex }))}"
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    strokes: e.detail.hex,
+                                }))}"
                             position="responsive"
                         />
                     </div>
@@ -833,7 +836,10 @@
                             bind:hex="{$colourContext.labels}"
                             on:change="{(e) =>
                                 e.detail.hex &&
-                                colourContext.update((v) => ({ ...v, labels: e.detail.hex }))}"
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    labels: e.detail.hex,
+                                }))}"
                             position="responsive"
                         />
                     </div>
@@ -845,7 +851,10 @@
                             bind:hex="{$colourContext.fill}"
                             on:change="{(e) =>
                                 e.detail.hex &&
-                                colourContext.update((v) => ({ ...v, fill: e.detail.hex }))}"
+                                colourContext.update((v) => ({
+                                    ...v,
+                                    fill: e.detail.hex,
+                                }))}"
                             position="responsive"
                         />
                     </div>
