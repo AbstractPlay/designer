@@ -189,7 +189,7 @@
                 $state.board.style.startsWith("hex-even") ||
                 $state.board.style.startsWith("hex-slanted") ||
                 $state.board.style.startsWith("cairo") ||
-                $state.board.style === "snubsquare-cells" ||
+                $state.board.style.startsWith("snubsquare") ||
                 $state.board.style === "rect-of-tri"
             ) {
                 canBlock = true;
